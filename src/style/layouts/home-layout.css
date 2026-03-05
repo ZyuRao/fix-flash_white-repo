@@ -45,7 +45,8 @@
   --main-col-3-min: 360px;
   --main-col-1-fr: 1fr;
   --main-col-2-fr: 2fr;
-  --main-col-3-fr: 2.4fr;
+  --main-col-3-fr: 4fr;
+  --main-col-gap: 0.2rem;
 }
 
 :root[data-theme="dark"] {
@@ -279,7 +280,7 @@ body {
 .home-main {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space);
+  gap: var(--main-col-gap);
   margin-top: calc(var(--header-main-gap) - var(--space));
   align-items: stretch;
 }
@@ -301,7 +302,7 @@ body {
   min-height: var(--main-mobile-h);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .latest-area {

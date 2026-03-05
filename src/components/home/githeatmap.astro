@@ -1,0 +1,25 @@
+---
+import { site } from "../../config/site";
+import "../../style/components/home/githeatmap.css";
+
+const username = site.profile.githubUsername || site.contact.githubUsername;
+const heatmapSrc = `https://ghchart.rshah.org/${encodeURIComponent(username)}`;
+const profileHref = `https://github.com/${encodeURIComponent(username)}`;
+---
+
+<a
+  class="githeatmap-link"
+  href={profileHref}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`View ${username}'s GitHub profile`}
+>
+  <img
+    class="githeatmap-image"
+    src={heatmapSrc}
+    alt={`${username} GitHub contribution heatmap`}
+    loading="lazy"
+    decoding="async"
+    referrerpolicy="no-referrer"
+  />
+</a>

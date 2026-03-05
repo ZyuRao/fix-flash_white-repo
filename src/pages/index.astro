@@ -1,6 +1,7 @@
 ---
 import HomeLayout from "../layouts/HomeLayout.astro";
 import CodeTime from "../components/home/CodeTime.astro";
+import GitHeatmap from "../components/home/githeatmap.astro";
 import Signature from "../components/home/signature.astro";
 import { site } from "../config/site";
 import "../style/components/home/profile.css";
@@ -22,5 +23,6 @@ const { profile, owner } = site;
     <p class="profile-one-word">{profile.bio}</p>
     <p class="profile-bio">{profile.intro}</p>
     <CodeTime />
+    <GitHeatmap />
   </section>
 </HomeLayout>

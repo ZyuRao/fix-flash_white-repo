@@ -1,0 +1,12 @@
+.githeatmap-link {
+  display: block;
+  width: min(100%, 320px);
+  text-decoration: none;
+  line-height: 0;
+}
+
+.githeatmap-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
