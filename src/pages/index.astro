@@ -9,12 +9,15 @@ import NetEaseMusicIcon from "../components/ui/icons/NetEaseMusicIcon.astro";
 import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
 import "../style/components/home/profile.css";
+import "../style/components/home/footer-info.css";
 
 const { profile, owner } = site;
 const githubUsername = (profile.githubUsername || site.contact.githubUsername).trim();
 const bilibiliId = profile.bilibiliId.trim();
 const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
+const currentYear = new Date().getFullYear();
+const copyrightYears = `${owner.startYear}-${currentYear}`;
 
 const profileLinks = [
   {
@@ -89,4 +92,19 @@ const profileLinks = [
     <CodeTime />
     <GitHeatmap />
   </section>
+  <div slot="footer-info" class="footer-meta" aria-label="Site footer information">
+    <p class="footer-meta-line">
+      <a href="https://github.com/hanlife02/Astro-star" target="_blank" rel="noreferrer">
+        @{copyrightYears} Astro-star
+      </a>
+      <span aria-hidden="true">·</span>
+      <a href={site.beian.icp.href} target="_blank" rel="noreferrer">
+        {site.beian.icp.text}
+      </a>
+      <span aria-hidden="true">·</span>
+      <a href={site.beian.moe.href} target="_blank" rel="noreferrer">
+        {site.beian.moe.text}
+      </a>
+    </p>
+  </div>
 </HomeLayout>
