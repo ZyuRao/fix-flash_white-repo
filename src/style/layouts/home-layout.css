@@ -4,6 +4,7 @@
   --golden: 1.61803398875;
   --shell-max: min(92vw, 1800px);
   --space: clamp(0.75rem, 1.4vw, 1.25rem);
+  --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
   --footer-height: clamp(54px, 7.8vh, 70px);
   --main-mobile-h: clamp(320px, 43vh, 520px);
   --main-desktop-h: clamp(430px, 58vh, 760px);
@@ -38,10 +39,13 @@ body {
 }
 
 .home-header {
-  padding: clamp(0.55rem, 1vw, 0.85rem);
+  padding-top: clamp(0.55rem, 1vw, 0.85rem);
+  padding-right: clamp(0.55rem, 1vw, 0.85rem);
+  padding-bottom: 0;
+  padding-left: clamp(0.55rem, 1vw, 0.85rem);
   display: grid;
   grid-template-columns: auto auto 1fr;
-  align-items: center;
+  align-items: end;
   column-gap: clamp(0.3rem, 0.8vw, 0.55rem);
 }
 
@@ -52,7 +56,11 @@ body {
 .signature-area {
   width: min(100%, clamp(168px, 34vw, 380px));
   min-height: clamp(44px, 7vh, 64px);
+  display: flex;
+  align-items: flex-end;
   justify-self: start;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .signature-stack {
@@ -69,7 +77,7 @@ body {
 }
 
 .signature-collapse-trigger {
-  width: 40px;
+  width: 48px;
   height: 32px;
   border: 0;
   padding: 0;
@@ -92,8 +100,8 @@ body {
 }
 
 .signature-collapse-trigger svg {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
 }
 
 .signature-collapse-panel {
@@ -118,10 +126,10 @@ body {
 
 .signature-collapse-links a {
   display: block;
-  padding: 0.35rem 0.8rem;
+  padding: 1.2rem 0.8rem;
   color: var(--line-soft);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1.8rem;
   line-height: 1.3;
 }
 
@@ -185,29 +193,32 @@ body {
   min-height: 40px;
   min-width: 140px;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: clamp(0.25rem, 0.8vw, 0.5rem);
   justify-self: end;
   margin-left: auto;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 .theme-switcher {
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0rem;
 }
 
 .theme-btn,
 .search-btn {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border: 0;
   background: transparent;
   color: var(--line-soft);
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  padding-bottom: 0;
   cursor: pointer;
   transition: color 0.2s ease, opacity 0.2s ease;
 }
@@ -231,12 +242,21 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space);
+  margin-top: calc(var(--header-main-gap) - var(--space));
   align-items: stretch;
 }
 
 .side-nav-area {
   display: none;
   min-height: var(--main-mobile-h);
+}
+
+.side-nav-stack {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
 .profile-area {
@@ -279,15 +299,6 @@ body {
 @media (min-width: 900px) {
   .mobile-nav-drawer {
     display: none;
-  }
-
-  .signature-collapse[open] .signature-collapse-panel {
-    display: none;
-  }
-
-  .signature-collapse:hover .signature-collapse-panel,
-  .signature-collapse:focus-within .signature-collapse-panel {
-    display: block;
   }
 
   .home-main {

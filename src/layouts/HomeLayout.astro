@@ -1,7 +1,7 @@
 ---
 import HomeBackground from "../components/background/HomeBackground.astro";
 import "../style/layouts/home-layout.css";
-import { Sun, Moon, Monitor, Search, AlignCenter } from "lucide-static";
+import { Sun, Moon, Monitor, Search, AlignLeft } from "lucide-static";
 import { siteConfig } from "../config/site";
 
 const pageTitle = "Home Wireframe";
@@ -31,22 +31,6 @@ const foldedNavItems = siteConfig.nav.filter((item) => item.href !== "/");
         <div class="wire-box signature-area" aria-label="Signature area">
           <div class="signature-stack">
             <slot name="signature" />
-            <details class="signature-collapse" aria-label="Signature navigation toggle">
-              <summary class="signature-collapse-trigger" aria-label="Toggle signature navigation">
-                <Fragment set:html={AlignCenter} />
-              </summary>
-              <nav class="wire-box signature-collapse-panel" aria-label="Signature navigation area">
-                <ul class="signature-collapse-links">
-                  {
-                    foldedNavItems.map((item) => (
-                      <li>
-                        <a href={item.href}>{item.label}</a>
-                      </li>
-                    ))
-                  }
-                </ul>
-              </nav>
-            </details>
           </div>
         </div>
 
@@ -66,7 +50,25 @@ const foldedNavItems = siteConfig.nav.filter((item) => item.href !== "/");
 
       <main class="home-main">
         <aside class="wire-box side-nav-area" aria-label="Side navigation area">
-          <slot name="side-nav" />
+          <div class="side-nav-stack">
+            <details class="signature-collapse" aria-label="Signature navigation toggle">
+              <summary class="signature-collapse-trigger" aria-label="Toggle signature navigation">
+                <Fragment set:html={AlignLeft} />
+              </summary>
+              <nav class="wire-box signature-collapse-panel" aria-label="Signature navigation area">
+                <ul class="signature-collapse-links">
+                  {
+                    foldedNavItems.map((item) => (
+                      <li>
+                        <a href={item.href}>{item.label}</a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </nav>
+            </details>
+            <slot name="side-nav" />
+          </div>
         </aside>
 
         <section class="wire-box profile-area" aria-label="Profile area">
@@ -97,6 +99,9 @@ const foldedNavItems = siteConfig.nav.filter((item) => item.href !== "/");
         dark: toggleButton?.querySelector('[data-theme-icon="dark"]'),
         system: toggleButton?.querySelector('[data-theme-icon="system"]'),
       };
+      const signatureCollapse = document.querySelector(".signature-collapse");
+      const signatureCollapseTrigger = signatureCollapse?.querySelector(".signature-collapse-trigger");
+      const desktopNavMedia = window.matchMedia("(min-width: 900px)");
       const snowBackground = document.querySelector(".snow-bg");
       const media = window.matchMedia("(prefers-color-scheme: dark)");
       let currentMode = "system";
@@ -147,6 +152,43 @@ const foldedNavItems = siteConfig.nav.filter((item) => item.href !== "/");
 
       const initialMode = getInitialMode();
       applyTheme(initialMode, false);
+
+      const syncDesktopSignatureCollapse = () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
+        if (desktopNavMedia.matches && signatureCollapse.open) {
+          signatureCollapse.open = false;
+        }
+      };
+
+      syncDesktopSignatureCollapse();
+      desktopNavMedia.addEventListener("change", syncDesktopSignatureCollapse);
+
+      signatureCollapseTrigger?.addEventListener("click", (event) => {
+        if (!desktopNavMedia.matches) return;
+        event.preventDefault();
+      });
+
+      signatureCollapse?.addEventListener("mouseenter", () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        signatureCollapse.open = true;
+      });
+
+      signatureCollapse?.addEventListener("mouseleave", () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        signatureCollapse.open = false;
+      });
+
+      signatureCollapse?.addEventListener("focusin", () => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        signatureCollapse.open = true;
+      });
+
+      signatureCollapse?.addEventListener("focusout", (event) => {
+        if (!(signatureCollapse instanceof HTMLDetailsElement) || !desktopNavMedia.matches) return;
+        const relatedTarget = event.relatedTarget;
+        if (relatedTarget instanceof Node && signatureCollapse.contains(relatedTarget)) return;
+        signatureCollapse.open = false;
+      });
 
       toggleButton?.addEventListener("click", () => {
         applyTheme(nextMode(currentMode));
