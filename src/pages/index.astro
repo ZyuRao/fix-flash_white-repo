@@ -1,8 +1,26 @@
 ---
 import HomeLayout from "../layouts/HomeLayout.astro";
+import CodeTime from "../components/home/CodeTime.astro";
 import Signature from "../components/home/signature.astro";
+import { site } from "../config/site";
+import "../style/components/home/profile.css";
+
+const { profile, owner } = site;
 ---
 
 <HomeLayout>
   <Signature slot="signature" />
+  <section slot="profile" class="profile-card" aria-label="Profile section">
+    <img
+      class="profile-avatar"
+      src={profile.avatarSrc}
+      alt={owner.name}
+      loading="lazy"
+      decoding="async"
+    />
+    <h2 class="profile-name">{owner.name}</h2>
+    <p class="profile-one-word">{profile.bio}</p>
+    <p class="profile-bio">{profile.intro}</p>
+    <CodeTime />
+  </section>
 </HomeLayout>

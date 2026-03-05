@@ -1,8 +1,8 @@
 ---
-import { siteConfig } from "../../config/site";
+import { site } from "../../config/site";
 import "../../style/components/home/signature.css";
 
-const { signature } = siteConfig;
+const signatureSvg = site.profile.signatureSvg;
 
 const normalizeSvgMarkup = (input: string) => {
   let value = input.trim();
@@ -16,14 +16,14 @@ const normalizeSvgMarkup = (input: string) => {
   return value.replace(/\\"/g, '"').replace(/\\'/g, "'");
 };
 
-const svgMarkup = normalizeSvgMarkup(signature.svgMarkup);
+const svgMarkup = normalizeSvgMarkup(signatureSvg);
 const isValidSvg = svgMarkup.startsWith("<svg") && svgMarkup.includes("</svg>");
 ---
 
 {
-  signature.enabled && isValidSvg && (
-    <div class="signature-wrap" role="img" aria-label={signature.ariaLabel}>
+  isValidSvg && (
+    <a class="signature-wrap" href="/" aria-label="Back to home">
       <Fragment set:html={svgMarkup} />
-    </div>
+    </a>
   )
 }

@@ -19,8 +19,7 @@
     radial-gradient(circle at 86% 83%, var(--snow-ink) 0 1.3px, transparent 2.6px),
     radial-gradient(circle at 92% 24%, var(--snow-ink) 0 2.2px, transparent 3.9px);
   background-size: 900px 650px;
-  clip-path: circle(0% at var(--snow-reveal-at, 10% 10%));
-  animation: snow-reveal 1800ms ease-out both, snow-drift 22s linear infinite;
+  animation: snow-drift 22s linear infinite;
 }
 
 .snow-bg[data-mode="light"] {
@@ -35,12 +34,6 @@
   --snow-strength: 24%;
 }
 
-@keyframes snow-reveal {
-  to {
-    clip-path: circle(160% at var(--snow-reveal-at, 10% 10%));
-  }
-}
-
 @keyframes snow-drift {
   from {
     background-position: 0 0, 10px 12px, -20px -30px;
@@ -53,6 +46,5 @@
 @media (prefers-reduced-motion: reduce) {
   .snow-bg {
     animation: none;
-    clip-path: none;
   }
 }

@@ -1,9 +1,41 @@
+@font-face {
+  font-family: "Biotif";
+  src: url("/fonts/Biotif-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Biotif";
+  src: url("/fonts/Biotif-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Biotif";
+  src: url("/fonts/Biotif-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Biotif";
+  src: url("/fonts/Biotif-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --line: #101010;
   --line-soft: rgba(16, 16, 16, 0.64);
   --golden: 1.61803398875;
   --shell-max: min(92vw, 1800px);
-  --space: clamp(0.75rem, 1.4vw, 1.25rem);
+  --space: clamp(0.5rem, 1.2vw, 1.25rem);
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
   --footer-height: clamp(54px, 7.8vh, 70px);
   --main-mobile-h: clamp(320px, 43vh, 520px);
@@ -23,7 +55,7 @@ body {
   margin: 0;
   background: transparent;
   color: var(--line);
-  font-family: "Segoe UI", "Noto Sans", sans-serif;
+  font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 .home-shell {

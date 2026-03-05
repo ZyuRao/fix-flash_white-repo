@@ -1,6 +1,7 @@
 .signature-wrap {
   width: 100%;
   color: var(--line, #101010);
+  text-decoration: none;
   min-height: 100%;
   display: flex;
   align-items: flex-end;
