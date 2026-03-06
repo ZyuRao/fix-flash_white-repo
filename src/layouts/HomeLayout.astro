@@ -331,9 +331,61 @@ const shellStyle = [
           tocList.prepend(progress);
         }
 
+        let scrollbar = toc.querySelector(".content-toc-scrollbar");
+        if (!(scrollbar instanceof HTMLElement)) {
+          scrollbar = document.createElement("div");
+          scrollbar.className = "content-toc-scrollbar";
+          scrollbar.setAttribute("aria-hidden", "true");
+          toc.append(scrollbar);
+        }
+
+        let scrollbarThumb = scrollbar.querySelector(".content-toc-scrollbar-thumb");
+        if (!(scrollbarThumb instanceof HTMLElement)) {
+          scrollbarThumb = document.createElement("span");
+          scrollbarThumb.className = "content-toc-scrollbar-thumb";
+          scrollbar.append(scrollbarThumb);
+        }
+
         toc.classList.add("has-progress");
 
         let frameId = 0;
+        let isDraggingScrollbar = false;
+
+        const syncScrollbar = () => {
+          if (!(scrollbar instanceof HTMLElement) || !(scrollbarThumb instanceof HTMLElement)) return;
+
+          const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
+          if (maxScrollTop <= 0) {
+            toc.classList.remove("has-scrollbar");
+            scrollbarThumb.style.height = "0px";
+            scrollbarThumb.style.transform = "translate3d(0, 0, 0)";
+            return;
+          }
+
+          toc.classList.add("has-scrollbar");
+          const trackHeight = scrollbar.clientHeight;
+          const thumbHeight = Math.max(34, Math.min(trackHeight, (contentBody.clientHeight / contentBody.scrollHeight) * trackHeight));
+          const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+          const ratio = maxScrollTop === 0 ? 0 : contentBody.scrollTop / maxScrollTop;
+          const thumbTop = ratio * maxThumbTop;
+
+          scrollbarThumb.style.height = `${thumbHeight}px`;
+          scrollbarThumb.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
+        };
+
+        const scrollFromScrollbarPointer = (clientY) => {
+          if (!(scrollbar instanceof HTMLElement) || !(scrollbarThumb instanceof HTMLElement)) return;
+          const trackRect = scrollbar.getBoundingClientRect();
+          const thumbHeight = scrollbarThumb.offsetHeight;
+          const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
+          const maxThumbTop = Math.max(0, trackRect.height - thumbHeight);
+          const rawThumbTop = clientY - trackRect.top - thumbHeight / 2;
+          const nextThumbTop = Math.min(Math.max(0, rawThumbTop), maxThumbTop);
+          const ratio = maxThumbTop === 0 ? 0 : nextThumbTop / maxThumbTop;
+          contentBody.scrollTop = ratio * maxScrollTop;
+          syncScrollbar();
+        };
+
         const getHeadingOffset = (heading) => {
           const headingRect = heading.getBoundingClientRect();
           const bodyRect = contentBody.getBoundingClientRect();
@@ -370,7 +422,10 @@ const shellStyle = [
           });
 
           const activeItem = activeEntry.link.closest(".content-toc-item");
-          if (!(activeItem instanceof HTMLElement) || !(progress instanceof HTMLElement)) return;
+          if (!(activeItem instanceof HTMLElement) || !(progress instanceof HTMLElement)) {
+            syncScrollbar();
+            return;
+          }
 
           const listRect = tocList.getBoundingClientRect();
           const itemRect = activeItem.getBoundingClientRect();
@@ -391,8 +446,10 @@ const shellStyle = [
 
           toc.scrollTo({
             top: nextTocScrollTop,
-            behavior: "smooth",
+            behavior: isDraggingScrollbar ? "auto" : "smooth",
           });
+
+          syncScrollbar();
         };
 
         const queueContentTocUpdate = () => {
@@ -420,6 +477,45 @@ const shellStyle = [
             queueContentTocUpdate();
           });
         });
+
+        scrollbar?.addEventListener("pointerdown", (event) => {
+          if (!(scrollbarThumb instanceof HTMLElement)) return;
+          const target = event.target;
+          if (target === scrollbarThumb) return;
+          event.preventDefault();
+          scrollFromScrollbarPointer(event.clientY);
+          queueContentTocUpdate();
+        });
+
+        scrollbarThumb?.addEventListener("pointerdown", (event) => {
+          if (!(scrollbarThumb instanceof HTMLElement)) return;
+          event.preventDefault();
+          isDraggingScrollbar = true;
+          scrollbarThumb.classList.add("is-dragging");
+          scrollbarThumb.setPointerCapture(event.pointerId);
+          scrollFromScrollbarPointer(event.clientY);
+        });
+
+        scrollbarThumb?.addEventListener("pointermove", (event) => {
+          if (!isDraggingScrollbar) return;
+          event.preventDefault();
+          scrollFromScrollbarPointer(event.clientY);
+          queueContentTocUpdate();
+        });
+
+        const stopScrollbarDrag = (event) => {
+          if (!(scrollbarThumb instanceof HTMLElement)) return;
+          if (!isDraggingScrollbar) return;
+          isDraggingScrollbar = false;
+          scrollbarThumb.classList.remove("is-dragging");
+          if (event instanceof PointerEvent && scrollbarThumb.hasPointerCapture(event.pointerId)) {
+            scrollbarThumb.releasePointerCapture(event.pointerId);
+          }
+          queueContentTocUpdate();
+        };
+
+        scrollbarThumb?.addEventListener("pointerup", stopScrollbarDrag);
+        scrollbarThumb?.addEventListener("pointercancel", stopScrollbarDrag);
 
         contentBody.addEventListener("scroll", queueContentTocUpdate, { passive: true });
         window.addEventListener("resize", queueContentTocUpdate);
