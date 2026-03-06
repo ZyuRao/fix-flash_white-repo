@@ -40,7 +40,7 @@
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
   --main-mobile-h: clamp(21rem, 46vh, 35rem);
-  --main-desktop-h: clamp(28.5rem, 78vh, 80rem);
+  --main-desktop-h: clamp(28.5rem, 72vh, 80rem);
   --main-col-1-min: 7.5rem;
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
@@ -67,27 +67,33 @@
 }
 
 html {
+  height: 100%;
   font-size: var(--font-size-base);
+  overflow: hidden;
 }
 
 body {
+  height: 100%;
   margin: 0;
   background: transparent;
   color: var(--line);
   line-height: 1.5;
   font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  overflow: hidden;
 }
 
 .home-shell {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   width: min(100%, var(--shell-max), calc(100dvh * var(--layout-max-ratio)));
   margin-inline: auto;
   padding: var(--space);
   display: grid;
   grid-template-rows: auto 1fr auto;
   gap: var(--space);
+  overflow: hidden;
 }
 
 .home-header {
