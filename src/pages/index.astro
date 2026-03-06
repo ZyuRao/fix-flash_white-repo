@@ -10,6 +10,7 @@ import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
 import "../style/components/home/profile.css";
 import "../style/components/home/footer-info.css";
+import "../style/components/home/latest-articles.css";
 
 const { profile, owner } = site;
 const githubUsername = (profile.githubUsername || site.contact.githubUsername).trim();
@@ -18,6 +19,70 @@ const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
 const currentYear = new Date().getFullYear();
 const copyrightYears = `${owner.startYear}-${currentYear}`;
+const blogModules = import.meta.glob("../content/blog/*.{md,mdx}", { eager: true });
+
+interface BlogModule {
+  frontmatter?: {
+    title?: string;
+    pubDate?: string | Date;
+    date?: string | Date;
+  };
+}
+
+interface LatestArticleItem {
+  title: string;
+  href: string;
+  pubDateIso: string;
+  displayDate: string;
+  year: string;
+  timestamp: number;
+}
+
+type LatestTimelineRow =
+  | { type: "year"; year: string }
+  | {
+      type: "article";
+      article: LatestArticleItem;
+      isFirstInYear: boolean;
+      isLastInYear: boolean;
+    };
+
+const latestArticles = Object.entries(blogModules)
+  .map(([path, mod]) => {
+    const frontmatter = (mod as BlogModule).frontmatter;
+    const title = frontmatter?.title?.trim();
+    const rawDate = frontmatter?.pubDate ?? frontmatter?.date;
+    const parsedDate = rawDate ? new Date(rawDate) : null;
+    const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
+
+    if (!title || !slug || !parsedDate || Number.isNaN(parsedDate.getTime())) return null;
+
+    return {
+      title,
+      href: `/blog/${slug}/`,
+      pubDateIso: parsedDate.toISOString(),
+      displayDate: `${parsedDate.toISOString().slice(5, 7)}.${parsedDate.toISOString().slice(8, 10)}`,
+      year: parsedDate.toISOString().slice(0, 4),
+      timestamp: parsedDate.getTime(),
+    } as LatestArticleItem;
+  })
+  .filter((item): item is LatestArticleItem => item !== null)
+  .sort((a, b) => b.timestamp - a.timestamp)
+  .slice(0, 8);
+
+const latestTimelineRows: LatestTimelineRow[] = [];
+for (let i = 0; i < latestArticles.length; i += 1) {
+  const article = latestArticles[i];
+  const prevArticle = latestArticles[i - 1];
+  const nextArticle = latestArticles[i + 1];
+  const isFirstInYear = !prevArticle || prevArticle.year !== article.year;
+  const isLastInYear = !nextArticle || nextArticle.year !== article.year;
+
+  if (isFirstInYear) {
+    latestTimelineRows.push({ type: "year", year: article.year });
+  }
+  latestTimelineRows.push({ type: "article", article, isFirstInYear, isLastInYear });
+}
 
 const profileLinks = [
   {
@@ -91,6 +156,41 @@ const profileLinks = [
     <p class="profile-bio">{profile.intro}</p>
     <CodeTime />
     <GitHeatmap />
+  </section>
+  <section slot="latest" class="latest-articles" aria-label="Latest articles section">
+    <h2 class="latest-articles-title">Latest Articles</h2>
+    {
+      latestArticles.length > 0 ? (
+        <ol class="latest-articles-list" aria-label="Latest articles timeline">
+          {
+            latestTimelineRows.map((row) =>
+              row.type === "year" ? (
+                <li class="latest-articles-year">
+                  <span class="latest-articles-year-label">{row.year}</span>
+                </li>
+              ) : (
+                <li
+                  class:list={[
+                    "latest-articles-item",
+                    row.isFirstInYear && "latest-articles-item--year-start",
+                    row.isLastInYear && "latest-articles-item--year-end",
+                  ]}
+                >
+                  <time class="latest-articles-time" datetime={row.article.pubDateIso}>
+                    {row.article.displayDate}
+                  </time>
+                  <a class="latest-articles-link" href={row.article.href}>
+                    {row.article.title}
+                  </a>
+                </li>
+              )
+            )
+          }
+        </ol>
+      ) : (
+        <p class="latest-articles-empty">No articles published yet.</p>
+      )
+    }
   </section>
   <div slot="footer-info" class="footer-meta" aria-label="Site footer information">
     <p class="footer-meta-line">
