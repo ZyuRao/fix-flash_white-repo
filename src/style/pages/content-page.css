@@ -1,6 +1,5 @@
 .content-page,
-.content-toc,
-.footer-meta {
+.content-toc {
   width: 100%;
 }
 
@@ -73,23 +72,11 @@
   padding-left: 1rem;
 }
 
-.content-toc-empty,
-.footer-meta-line {
+.content-toc-empty {
   margin: 0;
 }
 
-.footer-meta-line {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.footer-meta-line a {
-  color: var(--line);
-  text-decoration: none;
-}
-
-.footer-meta-line a:hover,
 .content-toc a:hover {
   text-decoration: underline;
 }
+

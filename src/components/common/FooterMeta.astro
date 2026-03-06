@@ -1,0 +1,29 @@
+---
+import { site } from "../../config/site";
+import "../../style/components/home/footer-info.css";
+
+interface Props {
+  repoHref?: string;
+  separator?: string;
+}
+
+const { repoHref = "https://github.com/hanlife02/Astro-star", separator = "|" } = Astro.props as Props;
+const currentYear = new Date().getFullYear();
+const copyrightYears = `${site.owner.startYear}-${currentYear}`;
+---
+
+<div class="footer-meta" aria-label="Site footer information">
+  <p class="footer-meta-line">
+    <a href={repoHref} target="_blank" rel="noreferrer">
+      @{copyrightYears} Astro-star
+    </a>
+    <span aria-hidden="true">{separator}</span>
+    <a href={site.beian.icp.href} target="_blank" rel="noreferrer">
+      {site.beian.icp.text}
+    </a>
+    <span aria-hidden="true">{separator}</span>
+    <a href={site.beian.moe.href} target="_blank" rel="noreferrer">
+      {site.beian.moe.text}
+    </a>
+  </p>
+</div>

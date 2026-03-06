@@ -3,6 +3,7 @@ import HomeLayout from "../layouts/HomeLayout.astro";
 import CodeTime from "../components/home/CodeTime.astro";
 import GitHeatmap from "../components/home/githeatmap.astro";
 import Signature from "../components/home/signature.astro";
+import FooterMeta from "../components/common/FooterMeta.astro";
 import Icon from "../components/ui/Icon.astro";
 import BilibiliIcon from "../components/ui/icons/BilibiliIcon.astro";
 import NetEaseMusicIcon from "../components/ui/icons/NetEaseMusicIcon.astro";
@@ -10,7 +11,6 @@ import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
 import { getGitTimestamps } from "../utils/git-timestamps";
 import "../style/components/home/profile.css";
-import "../style/components/home/footer-info.css";
 import "../style/components/home/latest-articles.css";
 
 const { profile, owner } = site;
@@ -18,8 +18,6 @@ const githubUsername = (profile.githubUsername || site.contact.githubUsername).t
 const bilibiliId = profile.bilibiliId.trim();
 const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
-const currentYear = new Date().getFullYear();
-const copyrightYears = `${owner.startYear}-${currentYear}`;
 const latestSourceModules = {
   ...import.meta.glob("../content/blog/*.{md,mdx}", { eager: true }),
   ...import.meta.glob("../content/note/*.{md,mdx}", { eager: true }),
@@ -196,19 +194,8 @@ const profileLinks = [
       )
     }
   </section>
-  <div slot="footer-info" class="footer-meta" aria-label="Site footer information">
-    <p class="footer-meta-line">
-      <a href="https://github.com/hanlife02/Astro-star" target="_blank" rel="noreferrer">
-        @{copyrightYears} Astro-star
-      </a>
-      <span aria-hidden="true">·</span>
-      <a href={site.beian.icp.href} target="_blank" rel="noreferrer">
-        {site.beian.icp.text}
-      </a>
-      <span aria-hidden="true">·</span>
-      <a href={site.beian.moe.href} target="_blank" rel="noreferrer">
-        {site.beian.moe.text}
-      </a>
-    </p>
-  </div>
+  <FooterMeta slot="footer-info" />
 </HomeLayout>
+
+
+

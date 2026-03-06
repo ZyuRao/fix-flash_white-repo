@@ -1,6 +1,7 @@
 ---
 import HomeLayout from "../layouts/HomeLayout.astro";
 import Signature from "../components/home/signature.astro";
+import FooterMeta from "../components/common/FooterMeta.astro";
 import { site } from "../config/site";
 import "../style/pages/content-page.css";
 
@@ -16,10 +17,6 @@ interface TocHeading {
   slug: string;
   text: string;
 }
-
-const { owner } = site;
-const currentYear = new Date().getFullYear();
-const copyrightYears = `${owner.startYear}-${currentYear}`;
 
 const aboutModule = import.meta.glob("../content/about/about.mdx", {
   eager: true,
@@ -81,7 +78,7 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
   </section>
 
   <aside slot="latest" class="content-toc" aria-label="About table of contents">
-    <h2 class="content-toc-title">目录</h2>
+    <h2 class="content-toc-title">&#30446;&#24405;</h2>
     {
       tocHeadings.length > 0 ? (
         <ol class="content-toc-list">
@@ -97,32 +94,11 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
           ))}
         </ol>
       ) : (
-        <p class="content-toc-empty">当前内容还没有二级或三级标题。</p>
+        <p class="content-toc-empty">No headings yet.</p>
       )
     }
   </aside>
 
-  <div
-    slot="footer-info"
-    class="footer-meta"
-    aria-label="Site footer information"
-  >
-    <p class="footer-meta-line">
-      <a
-        href="https://github.com/hanlife02/Astro-star"
-        target="_blank"
-        rel="noreferrer"
-      >
-        @{copyrightYears} Astro-star
-      </a>
-      <span aria-hidden="true">路</span>
-      <a href={site.beian.icp.href} target="_blank" rel="noreferrer">
-        {site.beian.icp.text}
-      </a>
-      <span aria-hidden="true">路</span>
-      <a href={site.beian.moe.href} target="_blank" rel="noreferrer">
-        {site.beian.moe.text}
-      </a>
-    </p>
-  </div>
+    <FooterMeta slot="footer-info" />
+  </aside>
 </HomeLayout>
