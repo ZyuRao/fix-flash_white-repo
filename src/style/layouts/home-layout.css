@@ -327,8 +327,10 @@ body {
 
 .home-footer {
   padding: clamp(0.55rem, 1vw, 0.85rem);
+  padding-top: clamp(0rem, 0vw, 1.05rem);
+  border-top: 1px solid var(--line-soft);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: nowrap;
   gap: var(--space);
 }
@@ -339,7 +341,7 @@ body {
   min-height: var(--footer-height);
   height: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   overflow-wrap: anywhere;
 }
 
@@ -347,10 +349,39 @@ body {
   flex: 0 0 auto;
   min-height: var(--footer-height);
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: clamp(0.4rem, 0.7vw, 0.55rem);
   margin-left: auto;
+}
+
+.footer-rss-btn {
+  width: var(--icon-btn-size);
+  height: var(--icon-btn-size);
+  border: 0;
+  background: transparent;
+  color: var(--line-soft);
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.footer-rss-btn:hover {
+  color: var(--line);
+}
+
+.footer-rss-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.footer-rss-btn svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
 }
 
 @media (min-width: 56.25rem) {

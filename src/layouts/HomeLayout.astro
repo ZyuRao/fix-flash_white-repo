@@ -2,6 +2,7 @@
 import BaseLayout from "./BaseLayout.astro";
 import HomeBackground from "../components/background/HomeBackground.astro";
 import Icon from "../components/ui/Icon.astro";
+import RssIcon from "../components/ui/icons/RssIcon.astro";
 import "../style/layouts/home-layout.css";
 import { Sun, Moon, Monitor, Search, AlignLeft } from "lucide-static";
 import { site } from "../config/site";
@@ -80,6 +81,9 @@ const foldedNavItems = site.nav;
       </div>
 
       <nav class="wire-box footer-icons" aria-label="Footer icon navigation">
+        <a class="footer-rss-btn" href="/rss.xml" aria-label="Subscribe via RSS" title="RSS Feed">
+          <RssIcon />
+        </a>
         <slot name="footer-icons" />
       </nav>
     </footer>
