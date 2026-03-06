@@ -17,21 +17,21 @@ interface TocHeading {
   text: string;
 }
 
-const aboutModule = import.meta.glob("../content/about/about.mdx", {
+const linksModule = import.meta.glob("../content/links/links.mdx", {
   eager: true,
-})["../content/about/about.mdx"] as ContentModule | undefined;
+})["../content/links/links.mdx"] as ContentModule | undefined;
 
-const aboutRawSource = import.meta.glob("../content/about/about.mdx", {
+const linksRawSource = import.meta.glob("../content/links/links.mdx", {
   eager: true,
   query: "?raw",
   import: "default",
-})["../content/about/about.mdx"] as string | undefined;
+})["../content/links/links.mdx"] as string | undefined;
 
-if (!aboutModule) {
-  throw new Error("Missing src/content/about/about.mdx");
+if (!linksModule) {
+  throw new Error("Missing src/content/links/links.mdx");
 }
 
-const AboutContent = aboutModule.default;
+const LinksContent = linksModule.default;
 
 function slugifyHeading(text: string) {
   return text
@@ -63,19 +63,19 @@ function extractTocHeadings(source: string) {
   });
 }
 
-const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
+const tocHeadings = extractTocHeadings(linksRawSource ?? "");
 ---
 
 <HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
   <Signature slot="signature" />
 
-  <section slot="profile" class="content-page" aria-label="About content">
+  <section slot="profile" class="content-page" aria-label="Links content">
     <div class="content-page-body">
-      <AboutContent />
+      <LinksContent />
     </div>
   </section>
 
-  <aside slot="latest" class="content-toc" aria-label="About table of contents">
+  <aside slot="latest" class="content-toc" aria-label="Links table of contents">
     <h2 class="content-toc-title">&#30446;&#24405;</h2>
     {
       tocHeadings.length > 0 ? (

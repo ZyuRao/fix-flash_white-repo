@@ -29,6 +29,9 @@
   margin: 0 0 1rem;
   font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
   line-height: 1.1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  text-stroke: 1px var(--line);
 }
 
 .content-page-body h2,
