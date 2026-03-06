@@ -38,7 +38,7 @@
   --shell-max: min(92vw, 112.5rem);
   --space: clamp(0.5rem, 1.2vw, 1.25rem);
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
-  --footer-height: clamp(3.25rem, 6vh, 4.5rem);
+  --footer-height: clamp(0.5rem, 1vh, 1rem);
   --main-mobile-h: clamp(20rem, 43vh, 32.5rem);
   --main-desktop-h: clamp(26.875rem, 58vh, 47.5rem);
   --main-col-1-min: 7.5rem;
@@ -52,7 +52,7 @@
   --menu-trigger-width: clamp(2.4rem, 2rem + 0.6vw, 3rem);
   --menu-trigger-height: clamp(2rem, 1.7rem + 0.5vw, 2.5rem);
   --menu-icon-size: clamp(1.3rem, 1rem + 0.6vw, 2rem);
-  --icon-btn-size: clamp(2.75rem, 2.3rem + 0.95vw, 3.75rem);
+  --icon-btn-size: clamp(2.25rem, 1.5rem + 0.95vw, 3.75rem);
   --icon-size: clamp(1.4rem, 1.15rem + 0.65vw, 2.25rem);
   --signature-link-size: clamp(1rem, 0.9rem + 0.85vw, 1.45rem);
 }
