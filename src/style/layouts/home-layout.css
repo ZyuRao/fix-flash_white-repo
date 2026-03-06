@@ -569,3 +569,29 @@ body {
 :root[data-theme="dark"] .mobile-nav-drawer .signature-collapse-links a {
   color: rgba(245, 245, 245, 0.96);
 }
+@media (max-width: 56.249rem) {
+  html,
+  body {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .home-shell {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .home-main {
+    align-items: start;
+  }
+
+  .profile-area,
+  .latest-area {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+}
