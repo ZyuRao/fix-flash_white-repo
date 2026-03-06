@@ -2,6 +2,7 @@
 import HomeLayout from "../layouts/HomeLayout.astro";
 import Signature from "../components/home/signature.astro";
 import { site } from "../config/site";
+import "../style/pages/content-page.css";
 
 interface ContentModule {
   default: unknown;
@@ -20,9 +21,9 @@ const { owner } = site;
 const currentYear = new Date().getFullYear();
 const copyrightYears = `${owner.startYear}-${currentYear}`;
 
-const aboutModule = import.meta.glob("../content/about/about.mdx", { eager: true })[
-  "../content/about/about.mdx"
-] as ContentModule | undefined;
+const aboutModule = import.meta.glob("../content/about/about.mdx", {
+  eager: true,
+})["../content/about/about.mdx"] as ContentModule | undefined;
 
 const aboutRawSource = import.meta.glob("../content/about/about.mdx", {
   eager: true,
@@ -70,7 +71,7 @@ function extractTocHeadings(source: string) {
 const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
 ---
 
-<HomeLayout mainCol2Fr="3.2fr" mainCol3Fr="2fr">
+<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
   <Signature slot="signature" />
 
   <section slot="profile" class="content-page" aria-label="About content">
@@ -84,13 +85,16 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
     {
       tocHeadings.length > 0 ? (
         <ol class="content-toc-list">
-          {
-            tocHeadings.map((heading) => (
-              <li class:list={["content-toc-item", heading.depth === 3 && "content-toc-item--nested"]}>
-                <a href={`#${heading.slug}`}>{heading.text}</a>
-              </li>
-            ))
-          }
+          {tocHeadings.map((heading) => (
+            <li
+              class:list={[
+                "content-toc-item",
+                heading.depth === 3 && "content-toc-item--nested",
+              ]}
+            >
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            </li>
+          ))}
         </ol>
       ) : (
         <p class="content-toc-empty">当前内容还没有二级或三级标题。</p>
@@ -98,9 +102,17 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
     }
   </aside>
 
-  <div slot="footer-info" class="footer-meta" aria-label="Site footer information">
+  <div
+    slot="footer-info"
+    class="footer-meta"
+    aria-label="Site footer information"
+  >
     <p class="footer-meta-line">
-      <a href="https://github.com/hanlife02/Astro-star" target="_blank" rel="noreferrer">
+      <a
+        href="https://github.com/hanlife02/Astro-star"
+        target="_blank"
+        rel="noreferrer"
+      >
         @{copyrightYears} Astro-star
       </a>
       <span aria-hidden="true">路</span>
@@ -114,101 +126,3 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
     </p>
   </div>
 </HomeLayout>
-
-<style>
-  .content-page,
-  .content-toc,
-  .footer-meta {
-    width: 100%;
-  }
-
-  .content-toc-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .content-toc a {
-    color: var(--line);
-    text-decoration: none;
-  }
-
-  .content-page {
-    display: block;
-    align-self: stretch;
-  }
-
-  .content-page-body {
-    height: 100%;
-    padding: clamp(0.85rem, 1.8vw, 1.4rem);
-    overflow: auto;
-  }
-
-  .content-page-body :global(h1) {
-    margin: 0 0 1rem;
-    font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
-    line-height: 1.1;
-  }
-
-  .content-page-body :global(h2),
-  .content-page-body :global(h3) {
-    color: var(--line);
-    scroll-margin-top: 1rem;
-  }
-
-  .content-page-body :global(p),
-  .content-page-body :global(li) {
-    color: var(--line);
-    line-height: 1.8;
-  }
-
-  .content-page-body :global(a) {
-    color: var(--line);
-  }
-
-  .content-toc {
-    height: 100%;
-    padding: clamp(0.85rem, 1.8vw, 1.4rem);
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    overflow: auto;
-  }
-
-  .content-toc-title {
-    margin: 0;
-    font-size: clamp(1.4rem, 1.2rem + 0.6vw, 2rem);
-    line-height: 1.1;
-  }
-
-  .content-toc-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-  }
-
-  .content-toc-item--nested {
-    padding-left: 1rem;
-  }
-
-  .content-toc-empty,
-  .footer-meta-line {
-    margin: 0;
-  }
-
-  .footer-meta-line {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-
-  .footer-meta-line a {
-    color: var(--line);
-    text-decoration: none;
-  }
-
-  .footer-meta-line a:hover,
-  .content-toc a:hover {
-    text-decoration: underline;
-  }
-</style>

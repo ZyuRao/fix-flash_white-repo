@@ -1,0 +1,95 @@
+.content-page,
+.content-toc,
+.footer-meta {
+  width: 100%;
+}
+
+.content-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.content-toc a {
+  color: var(--line);
+  text-decoration: none;
+}
+
+.content-page {
+  display: block;
+  align-self: stretch;
+}
+
+.content-page-body {
+  height: 100%;
+  padding: clamp(0.85rem, 1.8vw, 1.4rem);
+  overflow: auto;
+}
+
+.content-page-body h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.content-page-body h2,
+.content-page-body h3 {
+  color: var(--line);
+  scroll-margin-top: 1rem;
+}
+
+.content-page-body p,
+.content-page-body li {
+  color: var(--line);
+  line-height: 1.8;
+}
+
+.content-page-body a {
+  color: var(--line);
+}
+
+.content-toc {
+  height: 100%;
+  padding: clamp(0.85rem, 1.8vw, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  overflow: auto;
+}
+
+.content-toc-title {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.2rem + 0.6vw, 2rem);
+  line-height: 1.1;
+}
+
+.content-toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.content-toc-item--nested {
+  padding-left: 1rem;
+}
+
+.content-toc-empty,
+.footer-meta-line {
+  margin: 0;
+}
+
+.footer-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.footer-meta-line a {
+  color: var(--line);
+  text-decoration: none;
+}
+
+.footer-meta-line a:hover,
+.content-toc a:hover {
+  text-decoration: underline;
+}

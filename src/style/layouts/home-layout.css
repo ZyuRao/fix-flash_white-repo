@@ -42,8 +42,8 @@
   --main-mobile-h: clamp(20rem, 43vh, 32.5rem);
   --main-desktop-h: clamp(26.875rem, 58vh, 47.5rem);
   --main-col-1-min: 7.5rem;
-  --main-col-2-min: 17.5rem;
-  --main-col-3-min: 22.5rem;
+  --main-col-2-min: 7.5rem;
+  --main-col-3-min: 7.5rem;
   --main-col-1-fr: 0.5fr;
   --main-col-2-fr: 2.5fr;
   --main-col-3-fr: 3.5fr;
