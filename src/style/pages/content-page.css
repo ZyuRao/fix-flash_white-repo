@@ -112,7 +112,7 @@
 }
 
 .content-toc a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .content-page-body,
@@ -177,4 +177,13 @@
 }
 
 
+
+
+.content-toc-link:hover,
+.content-toc-link:focus-visible {
+  color: var(--line);
+  text-decoration: none;
+  transform: scale(1.05);
+  opacity: 1;
+}
 

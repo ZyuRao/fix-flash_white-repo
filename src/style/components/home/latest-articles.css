@@ -140,6 +140,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transform-origin: left center;
+  transition: color 0.22s ease, transform 0.22s ease;
 }
 
 .latest-articles-item[hidden],
@@ -163,7 +165,9 @@
 
 .latest-articles-link:hover,
 .latest-articles-link:focus-visible {
-  text-decoration: underline;
+  color: #483D8B;
+  text-decoration: none;
+  transform: scale(1.03);
 }
 
 .latest-articles-empty {
@@ -198,4 +202,5 @@
     padding: 0.6rem 0 0.6rem calc(var(--latest-line-col) + var(--latest-item-gap));
   }
 }
+
 

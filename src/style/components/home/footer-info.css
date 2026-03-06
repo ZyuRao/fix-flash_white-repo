@@ -1,4 +1,4 @@
-.footer-meta {
+﻿.footer-meta {
   width: 100%;
 }
 
@@ -7,7 +7,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 0.2rem 0.45rem;
+  gap: 0.28rem 0.65rem;
   font-size: clamp(0.8rem, 0.73rem + 0.4vw, 0.95rem);
   line-height: 1.2;
   color: var(--line-soft);
@@ -16,10 +16,17 @@
 .footer-meta-line a {
   color: inherit;
   text-decoration: none;
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  transform-origin: center center;
+  transition: color 0.22s ease, transform 0.22s ease;
 }
 
 .footer-meta-line a:hover,
 .footer-meta-line a:focus-visible {
-  color: var(--line);
-  text-decoration: underline;
+  color: #483D8B;
+  text-decoration: none;
+  transform: scale(1.04);
+  z-index: 1;
 }
