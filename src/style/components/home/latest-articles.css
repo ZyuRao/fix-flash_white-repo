@@ -64,10 +64,11 @@
   width: 100%;
   position: relative;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: baseline;
   gap: 0.18rem var(--latest-item-gap);
   padding: 0.55rem 0 0.55rem calc(var(--latest-line-col) + var(--latest-item-gap));
+  min-width: 0;
 }
 
 .latest-articles-item::before {
@@ -115,13 +116,16 @@
 }
 
 .latest-articles-link {
-  display: inline;
+  display: block;
+  flex: 1 1 auto;
   color: var(--line);
   text-decoration: none;
   font-size: var(--latest-title-size);
   line-height: var(--latest-text-line-height);
-  overflow-wrap: anywhere;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .latest-articles-link:hover,
