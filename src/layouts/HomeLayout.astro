@@ -1,10 +1,11 @@
-﻿---
+---
 import BaseLayout from "./BaseLayout.astro";
 import HomeBackground from "../components/background/HomeBackground.astro";
 import Icon from "../components/ui/Icon.astro";
 import RssIcon from "../components/ui/icons/RssIcon.astro";
+import FloatingActionButton from "../components/ui/FloatingActionButton.astro";
 import "../style/layouts/home-layout.css";
-import { Sun, Moon, Monitor, Search, AlignLeft, Github } from "lucide-static";
+import { Sun, Moon, Monitor, Search, AlignLeft, Github, TableOfContents } from "lucide-static";
 import { site } from "../config/site";
 
 interface Props {
@@ -30,15 +31,6 @@ const shellStyle = [
   <HomeBackground slot="background" mode="light" />
   <div class="home-shell" style={shellStyle || undefined}>
     <header class="home-header">
-      <details class="nav-drawer mobile-nav-drawer">
-        <summary class="hamburger" aria-label="Toggle navigation">
-        </summary>
-
-        <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
-          <slot name="side-nav" />
-        </nav>
-      </details>
-
       <div class="wire-box signature-area" aria-label="Signature area">
         <div class="signature-stack">
           <slot name="signature" />
@@ -56,6 +48,15 @@ const shellStyle = [
         <button type="button" class="search-btn" aria-label="Search">
           <Icon svg={Search} />
         </button>
+        <details class="nav-drawer mobile-nav-drawer">
+          <summary class="hamburger" aria-label="Toggle navigation">
+            <Icon svg={AlignLeft} />
+          </summary>
+
+          <nav class="wire-box nav-panel" aria-label="Mobile navigation area">
+            <slot name="side-nav" />
+          </nav>
+        </details>
       </div>
     </header>
 
@@ -90,6 +91,10 @@ const shellStyle = [
         <slot name="latest" />
       </section>
     </main>
+
+    <div class="floating-action-stack" aria-label="Page controls" hidden>
+      <FloatingActionButton id="toc-fab" label="Toggle table of contents" iconSvg={TableOfContents} className="floating-action-button--toc" />
+    </div>
 
     <footer class="home-footer">
       <div class="wire-box footer-info" aria-label="Footer info area">
@@ -228,6 +233,66 @@ const shellStyle = [
         }
       };
 
+      const initMobileTocDrawer = () => {
+        const shell = document.querySelector(".home-shell");
+        const latestArea = document.querySelector(".latest-area");
+        const toc = latestArea?.querySelector(":scope > .content-toc");
+        const fabStack = document.querySelector(".floating-action-stack");
+        const tocButton = document.getElementById("toc-fab");
+        const tocMedia = window.matchMedia("(min-width: 56.25rem)");
+
+        if (!(shell instanceof HTMLElement) || !(latestArea instanceof HTMLElement) || !(toc instanceof HTMLElement) || !(tocButton instanceof HTMLButtonElement)) {
+          if (tocButton instanceof HTMLElement) {
+            tocButton.hidden = true;
+          }
+          if (fabStack instanceof HTMLElement) {
+            fabStack.hidden = true;
+          }
+          return;
+        }
+
+        shell.classList.add("home-shell--has-mobile-toc");
+
+        const syncMobileTocState = () => {
+          const isDesktop = tocMedia.matches;
+          if (isDesktop) {
+            shell.classList.remove("is-mobile-toc-open");
+          }
+
+          tocButton.hidden = isDesktop;
+          if (fabStack instanceof HTMLElement) {
+            fabStack.hidden = isDesktop;
+          }
+          tocButton.setAttribute("aria-expanded", String(shell.classList.contains("is-mobile-toc-open")));
+        };
+
+        const closeMobileToc = () => {
+          shell.classList.remove("is-mobile-toc-open");
+          syncMobileTocState();
+        };
+
+        tocButton.addEventListener("click", () => {
+          if (tocMedia.matches) return;
+          shell.classList.toggle("is-mobile-toc-open");
+          syncMobileTocState();
+        });
+
+        toc.addEventListener("click", (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          if (!target.closest("a")) return;
+          if (tocMedia.matches) return;
+          closeMobileToc();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key !== "Escape") return;
+          closeMobileToc();
+        });
+
+        tocMedia.addEventListener("change", syncMobileTocState);
+        syncMobileTocState();
+      };
       const initContentToc = () => {
         const toc = document.querySelector(".content-toc");
         const tocList = toc?.querySelector(".content-toc-list");
@@ -355,6 +420,7 @@ const shellStyle = [
       };
 
       initContentToc();
+      initMobileTocDrawer();
 
       media.addEventListener("change", handleSystemThemeChange);
   </script>

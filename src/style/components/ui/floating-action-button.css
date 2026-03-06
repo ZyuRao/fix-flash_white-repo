@@ -1,0 +1,41 @@
+.floating-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: clamp(2.9rem, 2.65rem + 1vw, 3.6rem);
+  height: clamp(2.9rem, 2.65rem + 1vw, 3.6rem);
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, white 76%, transparent);
+  color: var(--line);
+  box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--line) 12%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: transform 0.22s ease, border-color 0.22s ease, color 0.22s ease, background 0.22s ease;
+}
+
+.floating-action-button:hover,
+.floating-action-button:focus-visible {
+  border-color: color-mix(in srgb, #483D8B 34%, transparent);
+  color: #483D8B;
+  transform: translateY(-0.08rem) scale(1.03);
+}
+
+.floating-action-button-icon,
+.floating-action-button-icon svg {
+  display: inline-flex;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.floating-action-button-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.floating-action-button[hidden] {
+  display: none !important;
+}

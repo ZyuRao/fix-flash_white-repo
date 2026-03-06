@@ -423,3 +423,25 @@
     right: clamp(1.5rem, 1.15rem + 1vw, 2.6rem);
   }
 }
+
+@media (max-width: 56.249rem) {
+  .home-shell--has-mobile-toc .latest-area {
+    display: none;
+  }
+
+  .home-shell--has-mobile-toc.is-mobile-toc-open .latest-area {
+    position: fixed;
+    right: clamp(0.9rem, 4vw, 1.35rem);
+    bottom: clamp(4.6rem, 10vw, 5.8rem);
+    z-index: 40;
+    display: flex;
+    width: min(82vw, 20rem);
+    height: min(62dvh, 30rem);
+    max-height: min(62dvh, 30rem);
+  }
+
+  .home-shell--has-mobile-toc.is-mobile-toc-open .latest-area > .content-toc {
+    height: 100%;
+    width: 100%;
+  }
+}

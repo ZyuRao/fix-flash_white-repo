@@ -1,4 +1,4 @@
-﻿@font-face {
+@font-face {
   font-family: "Biotif";
   src: url("/fonts/Biotif-Regular.ttf") format("truetype");
   font-weight: 400;
@@ -102,7 +102,7 @@ body {
   padding-bottom: 0;
   padding-left: clamp(0.55rem, 1vw, 0.85rem);
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   column-gap: clamp(0.3rem, 0.8vw, 0.55rem);
 }
@@ -205,8 +205,8 @@ body {
 }
 
 .mobile-nav-drawer {
-  display: block;
-  justify-self: start;
+  display: inline-flex;
+  align-items: center;
 }
 
 .hamburger {
@@ -221,20 +221,22 @@ body {
   cursor: pointer;
   list-style: none;
   color: var(--line-soft);
+  line-height: 0;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .hamburger::-webkit-details-marker {
   display: none;
 }
 
-.hamburger::before {
-  content: "";
-  width: clamp(1rem, 0.9rem + 0.45vw, 1.5rem);
-  height: clamp(0.1rem, 0.08rem + 0.08vw, 0.16rem);
-  background: currentColor;
-  box-shadow:
-    0 clamp(-0.35rem, -0.28rem - 0.15vw, -0.55rem) 0 currentColor,
-    0 clamp(0.35rem, 0.28rem + 0.15vw, 0.55rem) 0 currentColor;
+.hamburger:hover {
+  color: var(--line);
+}
+
+.hamburger svg {
+  width: var(--icon-size);
+  height: var(--icon-size);
+  display: block;
 }
 
 .nav-panel {
@@ -247,6 +249,11 @@ body {
   z-index: 2;
 }
 
+.mobile-nav-drawer .nav-panel {
+  left: auto;
+  right: 0;
+}
+
 .nav-drawer[open] .nav-panel {
   display: block;
 }
@@ -256,7 +263,7 @@ body {
   min-height: clamp(2.25rem, 1.9rem + 0.55vw, 2.85rem);
   min-width: clamp(8rem, 7rem + 2.6vw, 11rem);
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
   gap: clamp(0.25rem, 0.8vw, 0.5rem);
   justify-self: end;
@@ -267,7 +274,7 @@ body {
 
 .theme-switcher {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 0rem;
 }
 
@@ -418,6 +425,18 @@ body {
 }
 
 @media (min-width: 56.25rem) {
+  .home-header {
+    grid-template-columns: auto auto 1fr;
+  }
+
+  .header-actions {
+    align-items: flex-end;
+  }
+
+  .theme-switcher {
+    align-items: flex-end;
+  }
+
   .mobile-nav-drawer {
     display: none;
   }
@@ -468,3 +487,27 @@ body {
 
 
 
+
+.floating-action-stack {
+  position: fixed;
+  right: clamp(0.9rem, 4vw, 1.35rem);
+  bottom: clamp(0.95rem, 4vw, 1.35rem);
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  pointer-events: none;
+}
+
+.floating-action-stack > * {
+  pointer-events: auto;
+}
+
+@media (min-width: 56.25rem) {
+  .floating-action-stack {
+    display: none;
+  }
+}
+.floating-action-stack[hidden] {
+  display: none !important;
+}
