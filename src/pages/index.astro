@@ -18,10 +18,8 @@ const githubUsername = (profile.githubUsername || site.contact.githubUsername).t
 const bilibiliId = profile.bilibiliId.trim();
 const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
-const latestSourceModules = {
-  ...import.meta.glob("../content/blog/*.{md,mdx}", { eager: true }),
-  ...import.meta.glob("../content/note/*.{md,mdx}", { eager: true }),
-};
+const latestBlogSourceModules = import.meta.glob("../content/blog/*.{md,mdx}", { eager: true });
+const latestNoteSourceModules = import.meta.glob("../content/note/*.{md,mdx}", { eager: true });
 
 interface BlogModule {
   frontmatter?: {
@@ -45,12 +43,12 @@ interface LatestTimelineGroup {
   articles: LatestArticleItem[];
 }
 
-const latestArticles = Object.entries(latestSourceModules)
+function buildLatestArticles(sourceModules: Record<string, unknown>, section: "blog" | "note") {
+  return Object.entries(sourceModules)
   .map(([path, mod]) => {
     const frontmatter = (mod as BlogModule).frontmatter;
     const title = frontmatter?.title?.trim();
     const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
-    const section = path.includes("/note/") ? "note" : "blog";
     const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
     const pubDate = createdAt ?? updatedAt;
 
@@ -69,20 +67,29 @@ const latestArticles = Object.entries(latestSourceModules)
   })
   .filter((item): item is LatestArticleItem => item !== null)
   .sort((a, b) => b.timestamp - a.timestamp);
+}
 
-const latestAnimationOrderMap = new Map(latestArticles.map((article, index) => [article.href, index]));
+function buildLatestTimelineGroups(latestArticles: LatestArticleItem[]) {
+  return latestArticles.reduce<LatestTimelineGroup[]>((groups, article) => {
+    const currentGroup = groups[groups.length - 1];
 
-const latestTimelineGroups = latestArticles.reduce<LatestTimelineGroup[]>((groups, article) => {
-  const currentGroup = groups[groups.length - 1];
+    if (currentGroup?.year === article.year) {
+      currentGroup.articles.push(article);
+      return groups;
+    }
 
-  if (currentGroup?.year === article.year) {
-    currentGroup.articles.push(article);
+    groups.push({ year: article.year, articles: [article] });
     return groups;
-  }
+  }, []);
+}
 
-  groups.push({ year: article.year, articles: [article] });
-  return groups;
-}, []);
+const latestBlogArticles = buildLatestArticles(latestBlogSourceModules, "blog");
+const latestNoteArticles = buildLatestArticles(latestNoteSourceModules, "note");
+const latestAnimationOrderMap = new Map(
+  [...latestBlogArticles, ...latestNoteArticles].map((article, index) => [article.href, index]),
+);
+const latestBlogTimelineGroups = buildLatestTimelineGroups(latestBlogArticles);
+const latestNoteTimelineGroups = buildLatestTimelineGroups(latestNoteArticles);
 
 const profileLinks = [
   {
@@ -157,61 +164,67 @@ const profileLinks = [
     <CodeTime />
     <GitHeatmap />
   </section>
-  <section
-    slot="latest"
-    class="latest-articles"
-    aria-label="Latest articles section"
-    data-latest-container
-  >
-    <h2 class="latest-articles-title">Latest Articles</h2>
+  <section slot="latest" class="latest-articles" aria-label="Latest content section">
     {
-      latestTimelineGroups.length > 0 ? (
-        <div class="latest-articles-groups" aria-label="Latest articles timeline" data-latest-groups>
+      [
+        { key: "blogs", title: "Latest Blogs", groups: latestBlogTimelineGroups },
+        { key: "notes", title: "Latest Notes", groups: latestNoteTimelineGroups },
+      ].map((block) => (
+        <section
+          class="latest-articles-panel"
+          aria-label={block.title}
+          data-latest-container
+          data-latest-key={block.key}
+        >
+          <h2 class="latest-articles-title">{block.title}</h2>
           {
-            latestTimelineGroups.map((group) => (
-              <section class="latest-articles-group" aria-label={`${group.year} articles`} data-latest-group>
-                <h3 class="latest-articles-year-label" data-latest-year>{group.year}</h3>
-                <ol class="latest-articles-list" aria-label={`${group.year} timeline`}>
-                  {
-                    group.articles.map((article, index) => (
-                      <li
-                        class:list={[
-                          "latest-articles-item",
-                          index === 0 && "latest-articles-item--year-start",
-                          index === group.articles.length - 1 && "latest-articles-item--year-end",
-                        ]}
-                        data-latest-item
-                      >
-                        <div
-                          class="latest-articles-item-content"
-                          style={`--latest-enter-order: ${latestAnimationOrderMap.get(article.href) ?? 0};`}
-                        >
-                          <time class="latest-articles-time" datetime={article.pubDateIso}>
-                            {article.displayDate}
-                          </time>
-                          <a class="latest-articles-link" href={article.href}>
-                            {article.title}
-                          </a>
-                        </div>
-                      </li>
-                    ))
-                  }
-                </ol>
-              </section>
-            ))
+            block.groups.length > 0 ? (
+              <div class="latest-articles-groups" aria-label={`${block.title} timeline`} data-latest-groups>
+                {
+                  block.groups.map((group) => (
+                    <section class="latest-articles-group" aria-label={`${group.year} articles`} data-latest-group>
+                      <h3 class="latest-articles-year-label" data-latest-year>{group.year}</h3>
+                      <ol class="latest-articles-list" aria-label={`${group.year} timeline`}>
+                        {
+                          group.articles.map((article, index) => (
+                            <li
+                              class:list={[
+                                "latest-articles-item",
+                                index === 0 && "latest-articles-item--year-start",
+                                index === group.articles.length - 1 && "latest-articles-item--year-end",
+                              ]}
+                              data-latest-item
+                            >
+                              <div
+                                class="latest-articles-item-content"
+                                style={`--latest-enter-order: ${latestAnimationOrderMap.get(article.href) ?? 0};`}
+                              >
+                                <time class="latest-articles-time" datetime={article.pubDateIso}>
+                                  {article.displayDate}
+                                </time>
+                                <a class="latest-articles-link" href={article.href}>
+                                  {article.title}
+                                </a>
+                              </div>
+                            </li>
+                          ))
+                        }
+                      </ol>
+                    </section>
+                  ))
+                }
+              </div>
+            ) : (
+              <p class="latest-articles-empty">No {block.key} published yet.</p>
+            )
           }
-        </div>
-      ) : (
-        <p class="latest-articles-empty">No articles published yet.</p>
-      )
+        </section>
+      ))
     }
     <script is:inline>
       (() => {
-        const latestSection = document.querySelector("[data-latest-container]");
-        if (!(latestSection instanceof HTMLElement)) return;
-
-        const groupsRoot = latestSection.querySelector("[data-latest-groups]");
-        if (!(groupsRoot instanceof HTMLElement)) return;
+        const latestSections = Array.from(document.querySelectorAll("[data-latest-container]"));
+        if (latestSections.length === 0) return;
 
         const updateGroupState = (group) => {
           const items = Array.from(group.querySelectorAll("[data-latest-item]"));
@@ -228,7 +241,10 @@ const profileLinks = [
           }
         };
 
-        const syncLatestArticles = () => {
+        const syncLatestArticles = (latestSection) => {
+          const groupsRoot = latestSection.querySelector("[data-latest-groups]");
+          if (!(groupsRoot instanceof HTMLElement)) return;
+
           const sectionRect = latestSection.getBoundingClientRect();
           const sectionStyle = window.getComputedStyle(latestSection);
           const availableBottom =
@@ -268,20 +284,36 @@ const profileLinks = [
         let frameId = 0;
         const queueSync = () => {
           cancelAnimationFrame(frameId);
-          frameId = requestAnimationFrame(syncLatestArticles);
+          frameId = requestAnimationFrame(() => {
+            latestSections.forEach((latestSection) => {
+              if (latestSection instanceof HTMLElement) {
+                syncLatestArticles(latestSection);
+              }
+            });
+          });
         };
 
-        latestSection.setAttribute("data-latest-enhanced", "true");
-        queueSync();
-        requestAnimationFrame(() => {
-          latestSection.classList.add("latest-articles--entered");
+        latestSections.forEach((latestSection) => {
+          if (!(latestSection instanceof HTMLElement)) return;
+
+          latestSection.setAttribute("data-latest-enhanced", "true");
+          requestAnimationFrame(() => {
+            latestSection.classList.add("latest-articles--entered");
+          });
         });
+
+        queueSync();
 
         if ("ResizeObserver" in window) {
           const observer = new ResizeObserver(() => {
             queueSync();
           });
-          observer.observe(latestSection);
+
+          latestSections.forEach((latestSection) => {
+            if (latestSection instanceof HTMLElement) {
+              observer.observe(latestSection);
+            }
+          });
         }
 
         window.addEventListener("load", queueSync, { once: true });
