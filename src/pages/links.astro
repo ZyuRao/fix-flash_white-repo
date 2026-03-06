@@ -76,7 +76,6 @@ const tocHeadings = extractTocHeadings(linksRawSource ?? "");
   </section>
 
   <aside slot="latest" class="content-toc" aria-label="Links table of contents">
-    <h2 class="content-toc-title">&#30446;&#24405;</h2>
     {
       tocHeadings.length > 0 ? (
         <ol class="content-toc-list">
@@ -84,10 +83,12 @@ const tocHeadings = extractTocHeadings(linksRawSource ?? "");
             <li
               class:list={[
                 "content-toc-item",
-                heading.depth === 3 && "content-toc-item--nested",
+                `content-toc-item--depth-${heading.depth}`,
               ]}
             >
-              <a href={`#${heading.slug}`}>{heading.text}</a>
+              <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
+                {heading.text}
+              </a>
             </li>
           ))}
         </ol>
@@ -99,3 +100,4 @@ const tocHeadings = extractTocHeadings(linksRawSource ?? "");
 
   <FooterMeta slot="footer-info" />
 </HomeLayout>
+
