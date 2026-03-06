@@ -2,9 +2,11 @@
   --latest-date-size: clamp(0.8rem, 0.68rem + 0.45vw, 1.25rem);
   --latest-title-size: clamp(0.8rem, 0.68rem + 0.45vw, 1.25rem);
   --latest-text-line-height: 1.3;
-  --latest-date-col: 3.9rem;
-  --latest-gap: 1.1rem;
-  --latest-line-x: calc(var(--latest-date-col) + (var(--latest-gap) / 2));
+  --latest-year-col: clamp(3rem, 2.6rem + 2vw, 4.75rem);
+  --latest-group-gap: clamp(1.1rem, 0.9rem + 1vw, 1.75rem);
+  --latest-line-col: 1.2rem;
+  --latest-item-gap: 0.75rem;
+  --latest-line-x: calc(var(--latest-line-col) / 2);
   --latest-node-size: 0.45rem;
   height: 100%;
   padding: clamp(0.85rem, 1.8vw, 1.4rem);
@@ -23,44 +25,49 @@
 }
 
 .latest-articles-list {
-  position: relative;
   list-style: none;
   margin: 0;
-  padding: 0.1rem 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
 }
 
-.latest-articles-year {
+.latest-articles-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.latest-articles-group {
   position: relative;
-  min-height: 2rem;
-  padding: 0.35rem 0;
+  display: grid;
+  grid-template-columns: var(--latest-year-col) minmax(0, 1fr);
+  column-gap: var(--latest-group-gap);
+  align-items: center;
 }
 
 .latest-articles-year-label {
-  position: absolute;
-  left: var(--latest-line-x);
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: inline-block;
-  padding: 0.02rem 0.15rem;
-  font-size: clamp(1.02rem, 0.94rem + 0.38vw, 1.2rem);
-  line-height: 1.15;
+  margin: 0;
+  padding-top: 0;
+  font-size: clamp(1.2rem, 1.02rem + 0.85vw, 1.75rem);
+  line-height: 1;
   font-weight: 700;
   letter-spacing: 0.04em;
   color: transparent;
-  -webkit-text-stroke: 0.8px var(--line);
-  text-stroke: 0.8px var(--line);
+  -webkit-text-stroke: 0.9px var(--line);
+  text-stroke: 0.9px var(--line);
+  white-space: nowrap;
+  align-self: center;
 }
 
 .latest-articles-item {
   width: 100%;
   position: relative;
-  display: grid;
-  grid-template-columns: var(--latest-date-col) 1fr;
-  column-gap: var(--latest-gap);
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  padding: 0.55rem 0;
+  gap: 0.18rem var(--latest-item-gap);
+  padding: 0.55rem 0 0.55rem calc(var(--latest-line-col) + var(--latest-item-gap));
 }
 
 .latest-articles-item::before {
@@ -104,15 +111,17 @@
   white-space: nowrap;
   color: var(--line-soft);
   letter-spacing: 0.01em;
+  flex: 0 0 auto;
 }
 
 .latest-articles-link {
-  display: inline-block;
+  display: inline;
   color: var(--line);
   text-decoration: none;
   font-size: var(--latest-title-size);
   line-height: var(--latest-text-line-height);
   overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 .latest-articles-link:hover,
@@ -128,13 +137,23 @@
 
 @media (min-width: 56.25rem) {
   .latest-articles {
-    --latest-date-col: 4.3rem;
-    --latest-gap: 1.3rem;
+    --latest-year-col: clamp(3.5rem, 3rem + 1vw, 5.25rem);
+    --latest-group-gap: 1.85rem;
+    --latest-line-col: 1.35rem;
+    --latest-item-gap: 0.9rem;
     padding: clamp(1rem, 1.2vw, 1.6rem);
     gap: 0.9rem;
   }
 
+  .latest-articles-groups {
+    gap: 0.7rem;
+  }
+
+  .latest-articles-group {
+    column-gap: var(--latest-group-gap);
+  }
+
   .latest-articles-item {
-    padding: 0.6rem 0;
+    padding: 0.6rem 0 0.6rem calc(var(--latest-line-col) + var(--latest-item-gap));
   }
 }

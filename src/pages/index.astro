@@ -41,14 +41,10 @@ interface LatestArticleItem {
   timestamp: number;
 }
 
-type LatestTimelineRow =
-  | { type: "year"; year: string }
-  | {
-      type: "article";
-      article: LatestArticleItem;
-      isFirstInYear: boolean;
-      isLastInYear: boolean;
-    };
+interface LatestTimelineGroup {
+  year: string;
+  articles: LatestArticleItem[];
+}
 
 const latestArticles = Object.entries(latestSourceModules)
   .map(([path, mod]) => {
@@ -74,19 +70,17 @@ const latestArticles = Object.entries(latestSourceModules)
   .sort((a, b) => b.timestamp - a.timestamp)
   .slice(0, 8);
 
-const latestTimelineRows: LatestTimelineRow[] = [];
-for (let i = 0; i < latestArticles.length; i += 1) {
-  const article = latestArticles[i];
-  const prevArticle = latestArticles[i - 1];
-  const nextArticle = latestArticles[i + 1];
-  const isFirstInYear = !prevArticle || prevArticle.year !== article.year;
-  const isLastInYear = !nextArticle || nextArticle.year !== article.year;
+const latestTimelineGroups = latestArticles.reduce<LatestTimelineGroup[]>((groups, article) => {
+  const currentGroup = groups[groups.length - 1];
 
-  if (isFirstInYear) {
-    latestTimelineRows.push({ type: "year", year: article.year });
+  if (currentGroup?.year === article.year) {
+    currentGroup.articles.push(article);
+    return groups;
   }
-  latestTimelineRows.push({ type: "article", article, isFirstInYear, isLastInYear });
-}
+
+  groups.push({ year: article.year, articles: [article] });
+  return groups;
+}, []);
 
 const profileLinks = [
   {
@@ -164,33 +158,36 @@ const profileLinks = [
   <section slot="latest" class="latest-articles" aria-label="Latest articles section">
     <h2 class="latest-articles-title">Latest Articles</h2>
     {
-      latestArticles.length > 0 ? (
-        <ol class="latest-articles-list" aria-label="Latest articles timeline">
+      latestTimelineGroups.length > 0 ? (
+        <div class="latest-articles-groups" aria-label="Latest articles timeline">
           {
-            latestTimelineRows.map((row) =>
-              row.type === "year" ? (
-                <li class="latest-articles-year">
-                  <span class="latest-articles-year-label">{row.year}</span>
-                </li>
-              ) : (
-                <li
-                  class:list={[
-                    "latest-articles-item",
-                    row.isFirstInYear && "latest-articles-item--year-start",
-                    row.isLastInYear && "latest-articles-item--year-end",
-                  ]}
-                >
-                  <time class="latest-articles-time" datetime={row.article.pubDateIso}>
-                    {row.article.displayDate}
-                  </time>
-                  <a class="latest-articles-link" href={row.article.href}>
-                    {row.article.title}
-                  </a>
-                </li>
-              )
-            )
+            latestTimelineGroups.map((group) => (
+              <section class="latest-articles-group" aria-label={`${group.year} articles`}>
+                <h3 class="latest-articles-year-label">{group.year}</h3>
+                <ol class="latest-articles-list" aria-label={`${group.year} timeline`}>
+                  {
+                    group.articles.map((article, index) => (
+                      <li
+                        class:list={[
+                          "latest-articles-item",
+                          index === 0 && "latest-articles-item--year-start",
+                          index === group.articles.length - 1 && "latest-articles-item--year-end",
+                        ]}
+                      >
+                        <time class="latest-articles-time" datetime={article.pubDateIso}>
+                          {article.displayDate}
+                        </time>
+                        <a class="latest-articles-link" href={article.href}>
+                          {article.title}
+                        </a>
+                      </li>
+                    ))
+                  }
+                </ol>
+              </section>
+            ))
           }
-        </ol>
+        </div>
       ) : (
         <p class="latest-articles-empty">No articles published yet.</p>
       )
