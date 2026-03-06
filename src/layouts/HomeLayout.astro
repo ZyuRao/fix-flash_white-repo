@@ -268,14 +268,23 @@ const shellStyle = [
         };
 
         const updateContentToc = () => {
-          const threshold = contentBody.scrollTop + Math.min(contentBody.clientHeight * 0.22, 88);
-          let activeEntry = headingEntries[0];
-
-          headingEntries.forEach((entry) => {
-            if (getHeadingOffset(entry.heading) <= threshold) {
-              activeEntry = entry;
-            }
+          const viewportTop = contentBody.scrollTop;
+          const viewportBottom = viewportTop + contentBody.clientHeight;
+          const visibleEntries = headingEntries.filter((entry) => {
+            const headingTop = getHeadingOffset(entry.heading);
+            const headingBottom = headingTop + entry.heading.offsetHeight;
+            return headingBottom > viewportTop && headingTop < viewportBottom;
           });
+
+          let activeEntry = visibleEntries[visibleEntries.length - 1] ?? headingEntries[0];
+
+          if (!visibleEntries.length) {
+            headingEntries.forEach((entry) => {
+              if (getHeadingOffset(entry.heading) <= viewportTop) {
+                activeEntry = entry;
+              }
+            });
+          }
 
           headingEntries.forEach((entry) => {
             const isActive = entry === activeEntry;

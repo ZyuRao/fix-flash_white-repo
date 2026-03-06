@@ -10,7 +10,7 @@
 }
 
 .content-toc a {
-  color: var(--line);
+  color: color-mix(in srgb, var(--line) 58%, transparent);
   text-decoration: none;
 }
 
@@ -98,13 +98,13 @@
 .content-toc-link--depth-2 {
   font-size: clamp(0.96rem, 0.92rem + 0.2vw, 1.08rem);
   font-weight: 600;
-  opacity: 0.92;
+  opacity: inherit;
 }
 
 .content-toc-link--depth-3 {
   font-size: clamp(0.88rem, 0.84rem + 0.16vw, 0.98rem);
   font-weight: 500;
-  opacity: 0.78;
+  opacity: inherit;
 }
 
 .content-toc-empty {
@@ -137,7 +137,7 @@
   width: 0.2rem;
   height: 1.1rem;
   border-radius: 999px;
-  background: var(--line);
+  background: #483D8B;
   transform: translate3d(0, 0, 0);
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), left 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
   opacity: 0;
@@ -155,11 +155,14 @@
 .content-toc-link {
   display: inline-block;
   line-height: 1.35;
+  color: color-mix(in srgb, var(--line) 58%, transparent);
+  opacity: 0.72;
   transform-origin: left center;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, letter-spacing 0.2s ease;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, letter-spacing 0.2s ease, color 0.2s ease;
 }
 
 .content-toc-link.is-active {
+  color: var(--line);
   transform: scale(1.08);
   opacity: 1;
 }
@@ -172,5 +175,6 @@
 .content-toc-link--depth-3.is-active {
   letter-spacing: 0.01em;
 }
+
 
 
