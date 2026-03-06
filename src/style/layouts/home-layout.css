@@ -422,7 +422,11 @@ body {
   }
 
   .latest-area {
+    min-height: var(--main-desktop-h);
     grid-column: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

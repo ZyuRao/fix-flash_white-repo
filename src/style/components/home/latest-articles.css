@@ -53,6 +53,7 @@
 }
 
 .latest-articles-item {
+  width: 100%;
   position: relative;
   display: grid;
   grid-template-columns: var(--latest-date-col) 1fr;
