@@ -16,6 +16,8 @@ interface Props {
   description?: string;
   articleType: string;
   author: string;
+  articleRoutePath: string;
+  walineServerURL?: string;
   createdLabel: string;
   updatedLabel: string;
   articleWordCount: number;
@@ -29,6 +31,8 @@ const {
   description = "",
   articleType,
   author,
+  articleRoutePath,
+  walineServerURL = "",
   createdLabel,
   updatedLabel,
   articleWordCount,
@@ -53,6 +57,18 @@ const {
           <p class="article-content-meta-item"><span>Author</span><strong>{author}</strong></p>
           <p class="article-content-meta-item"><span>Created</span><strong>{createdLabel}</strong></p>
           <p class="article-content-meta-item"><span>Updated</span><strong>{updatedLabel}</strong></p>
+          <p class="article-content-meta-item">
+            <span>Views</span>
+            <strong>
+              <span
+                class="waline-pageview-count"
+                data-path={articleRoutePath}
+                data-server-url={walineServerURL}
+              >
+                —
+              </span>
+            </strong>
+          </p>
           <p class="article-content-meta-item"><span>Words</span><strong>{articleWordCount.toLocaleString("en-US")}</strong></p>
         </div>
       </header>
@@ -60,6 +76,21 @@ const {
       <ArticleContent />
     </div>
   </section>
+
+  <script is:inline type="module">
+    const pageviewElement = document.querySelector(".waline-pageview-count[data-server-url]");
+    const serverURL = pageviewElement?.getAttribute("data-server-url")?.trim();
+    const path = pageviewElement?.getAttribute("data-path")?.trim();
+
+    if (serverURL && path) {
+      const { pageviewCount } = await import("https://unpkg.com/@waline/client@v3/dist/pageview.js");
+
+      pageviewCount({
+        serverURL,
+        path,
+      });
+    }
+  </script>
 
   <aside slot="latest" class="content-toc" aria-label={`${section} table of contents`}>
     {
