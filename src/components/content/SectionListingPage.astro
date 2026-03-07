@@ -3,6 +3,7 @@ import HomeLayout from "../../layouts/HomeLayout.astro";
 import Signature from "../home/signature.astro";
 import FooterMeta from "../common/FooterMeta.astro";
 import "../../style/pages/content-page.css";
+import "../../style/components/content/section-listing-page.css";
 
 interface SectionCategoryEntry {
   archiveSlug: string;
@@ -29,9 +30,12 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
   <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} listing content`}>
     <div class="content-page-body">
       <header class="listing-header">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-          <h1 class="listing-header-title" style="margin:0;">{pageLabel}</h1>
-          <a href={viewAllHref}>{viewAllLabel}</a>
+        <div class="listing-header-bar">
+          <h1 class="listing-header-title listing-header-title--compact">{pageLabel}</h1>
+          <a class="listing-view-all-link" href={viewAllHref}>
+            <span>{viewAllLabel}</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
         </div>
       </header>
 
@@ -75,3 +79,5 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
 
   <FooterMeta slot="footer-info" />
 </HomeLayout>
+
+

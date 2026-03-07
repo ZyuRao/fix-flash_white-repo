@@ -1,0 +1,36 @@
+.listing-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.listing-header-title--compact {
+  margin: 0;
+}
+
+.listing-view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--line);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.listing-view-all-link:hover,
+.listing-view-all-link:focus-visible {
+  color: #483D8B;
+}
+
+.listing-groups > .content-toc-list {
+  padding-left: 0;
+}
+
+.listing-groups > .content-toc-list > .content-toc-item,
+.listing-groups > .content-toc-list > .content-toc-item--depth-2 {
+  padding-left: 0;
+}
