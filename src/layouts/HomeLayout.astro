@@ -378,6 +378,35 @@ const shellStyle = [
         tocMedia.addEventListener("change", syncMobileTocState);
         syncMobileTocState();
       };
+
+      const runContentPageEntrance = () => {
+        const contentPage = document.querySelector(".content-page");
+        const toc = document.querySelector(".content-toc");
+
+        if (!(contentPage instanceof HTMLElement)) return;
+
+        contentPage.dataset.pageEntrance = "ready";
+
+        if (toc instanceof HTMLElement) {
+          toc.dataset.tocEntrance = "ready";
+
+          Array.from(toc.querySelectorAll(".content-toc-item")).forEach((item, index) => {
+            if (!(item instanceof HTMLElement)) return;
+            item.style.setProperty("--content-toc-enter-order", `${index}`);
+          });
+        }
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            contentPage.dataset.pageEntrance = "entered";
+
+            if (toc instanceof HTMLElement) {
+              toc.dataset.tocEntrance = "entered";
+            }
+          });
+        });
+      };
+
       const initContentToc = () => {
         const toc = document.querySelector(".content-toc");
         const tocList = toc?.querySelector(".content-toc-list");
@@ -610,6 +639,19 @@ const shellStyle = [
       initMobileNavDrawer();
       initContentToc();
       initMobileTocDrawer();
+      runContentPageEntrance();
+
+      if (!window.__contentPageEntrancePageLoadBound) {
+        document.addEventListener("astro:page-load", () => {
+          if (typeof window.__runContentPageEntrance === "function") {
+            window.__runContentPageEntrance();
+          }
+        });
+
+        window.__contentPageEntrancePageLoadBound = true;
+      }
+
+      window.__runContentPageEntrance = runContentPageEntrance;
 
       media.addEventListener("change", handleSystemThemeChange);
   </script>
