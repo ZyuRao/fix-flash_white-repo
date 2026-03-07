@@ -489,7 +489,7 @@
 .listing-group-items {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.95rem;
+  gap: 0.78rem;
   min-width: 0;
 }
 
@@ -498,7 +498,7 @@
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  padding: 1rem clamp(1.6rem, 1.35rem + 1vw, 2.2rem) 1rem 1.05rem;
+  padding: 1.2rem clamp(0.5rem, 0.3rem + 0.9vw, 2.08rem) 0rem 1.3rem;
   border: 1px solid color-mix(in srgb, var(--line) 12%, transparent);
   border-radius: 1rem;
   background: color-mix(in srgb, var(--line) 2.5%, transparent);
@@ -530,20 +530,21 @@
   overflow-wrap: anywhere;
   color: var(--line);
   font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.14rem);
-  line-height: 1.45;
+  line-height: 1.34;
 }
 
 .listing-card-meta {
-  margin: 0.28rem 0 0;
+  margin: 0.16rem 0 0;
   color: color-mix(in srgb, var(--line) 52%, transparent);
   font-size: 0.88rem;
+  line-height: 1.35;
 }
 
 .listing-card-description {
-  margin: 0.4rem 0 0;
+  margin: 0.24rem 0 0;
   overflow: hidden;
   color: color-mix(in srgb, var(--line) 76%, transparent);
-  line-height: 1.7;
+  line-height: 1.5;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -555,7 +556,7 @@
 .listing-card-arrow {
   position: absolute;
   top: 50%;
-  right: clamp(1.2rem, 0.95rem + 1.6vw, 2.3rem);
+  right: clamp(0.34rem, 0.26rem + 0.62vw, 0.92rem);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -597,7 +598,7 @@
   }
 
   .listing-card-arrow {
-    right: clamp(1.5rem, 1.15rem + 1vw, 2.6rem);
+    right: clamp(0.52rem, 0.44rem + 0.48vw, 1.08rem);
   }
 }
 
