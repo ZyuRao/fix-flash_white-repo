@@ -3,8 +3,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  width: clamp(2.9rem, 2.65rem + 1vw, 3.6rem);
-  height: clamp(2.9rem, 2.65rem + 1vw, 3.6rem);
+  width: clamp(2.9rem, 3.1vw, 3.6rem);
+  height: clamp(2.9rem, 3.1vw, 3.6rem);
   padding: 0;
   border: 1px solid color-mix(in srgb, var(--line) 16%, transparent);
   border-radius: 999px;
