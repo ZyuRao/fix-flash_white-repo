@@ -34,7 +34,7 @@
   --line: #111111;
   --line-soft: rgba(17, 17, 17, 0.88);
   --layout-max-ratio: 1.44;
-  --font-size-base: clamp(0.9375rem, 0.86rem + 0.35vw, 1.1rem);
+  --font-size-base: clamp(0.9375rem, 0.86rem + 0.75vw, 1.8rem);
   --shell-max: min(92vw, 112.5rem);
   --space: clamp(0.5rem, 1.2vw, 1.25rem);
   --header-main-gap: clamp(2.75rem, 1.4vw, 1.25rem);
