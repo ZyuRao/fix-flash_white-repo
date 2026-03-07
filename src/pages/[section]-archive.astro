@@ -1,0 +1,92 @@
+---
+import SectionArchivePage from "../components/content/SectionArchivePage.astro";
+import { resolveContentDates } from "../utils/content-dates";
+import { resolveContentSlug } from "../utils/content-slug";
+import { resolveContentTitle } from "../utils/content-title";
+import { getGitTimestamps } from "../utils/git-timestamps";
+
+interface ContentModule {
+  frontmatter?: {
+    createdAt?: string | Date;
+    routeSlug?: string;
+    updatedAt?: string | Date;
+  };
+}
+
+interface ArchiveArticleItem {
+  createdAt: Date;
+  createdLabel: string;
+  href: string;
+  title: string;
+  year: string;
+}
+
+const sectionLabels = {
+  blog: "All Blogs",
+  note: "All Notes",
+  project: "All Projects",
+} as const;
+
+export function getStaticPaths() {
+  return ["blog", "note", "project"].map((section) => ({
+    params: { section },
+  }));
+}
+
+const { section } = Astro.params;
+
+if (!section || !(section in sectionLabels)) {
+  throw new Error("Unsupported archive section.");
+}
+
+const contentModules = import.meta.glob("../content/{blog,note,project}/*.{md,mdx}", {
+  eager: true,
+}) as Record<string, ContentModule>;
+
+const articles = Object.entries(contentModules)
+  .map(([path, mod]) => {
+    const match = path.match(/^\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+    if (!match || match[1] !== section) return null;
+
+    const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);
+    const title = resolveContentTitle(path);
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(path, import.meta.url));
+    const { createdAt, updatedAt } = resolveContentDates(mod.frontmatter, {
+      createdAt: gitCreatedAt,
+      updatedAt: gitUpdatedAt,
+    });
+    const publishedAt = createdAt ?? updatedAt;
+
+    if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
+
+    return {
+      createdAt: publishedAt,
+      createdLabel: new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+      }).format(publishedAt),
+      href: `/${section}/${routeSlug}/`,
+      title,
+      year: publishedAt.toISOString().slice(0, 4),
+    } satisfies ArchiveArticleItem;
+  })
+  .filter((item): item is ArchiveArticleItem => item !== null)
+  .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
+const yearGroups = articles.reduce<Array<{ articles: ArchiveArticleItem[]; year: string }>>((groups, article) => {
+  const currentGroup = groups[groups.length - 1];
+
+  if (currentGroup?.year === article.year) {
+    currentGroup.articles.push(article);
+    return groups;
+  }
+
+  groups.push({ year: article.year, articles: [article] });
+  return groups;
+}, []);
+
+const pageLabel = sectionLabels[section as keyof typeof sectionLabels];
+---
+
+<SectionArchivePage pageLabel={pageLabel} yearGroups={yearGroups} />

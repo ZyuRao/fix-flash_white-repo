@@ -1,0 +1,146 @@
+---
+import HomeLayout from "../../layouts/HomeLayout.astro";
+import Signature from "../home/signature.astro";
+import FooterMeta from "../common/FooterMeta.astro";
+import "../../style/pages/content-page.css";
+
+interface ArchiveArticleItem {
+  createdLabel: string;
+  href: string;
+  title: string;
+  year: string;
+}
+
+interface ArchiveYearGroup {
+  articles: ArchiveArticleItem[];
+  year: string;
+}
+
+interface Props {
+  pageLabel: string;
+  yearGroups: ArchiveYearGroup[];
+}
+
+const { pageLabel, yearGroups } = Astro.props as Props;
+---
+
+<HomeLayout mainCol2Fr="4fr" mainCol3Fr="1.5fr">
+  <Signature slot="signature" />
+
+  <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} archive content`}>
+    <div class="content-page-body">
+      <header class="listing-header">
+        <h1 class="listing-header-title">{pageLabel}</h1>
+      </header>
+
+      {
+        yearGroups.length > 0 ? (
+          <div class="archive-groups">
+            {yearGroups.map((group) => (
+              <section class="archive-group" aria-label={`${group.year} archive`}>
+                <h2 id={group.year} class="archive-year-heading">{group.year}</h2>
+                <ol class="archive-list" aria-label={`${group.year} timeline`}>
+                  {group.articles.map((article) => (
+                    <li class="archive-list-item">
+                      <time class="archive-item-date">{article.createdLabel}</time>
+                      <a class="archive-item-link" href={article.href}>{article.title}</a>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            ))}
+          </div>
+        ) : (
+          <p class="content-toc-empty">No content yet.</p>
+        )
+      }
+    </div>
+  </section>
+
+  <aside slot="latest" class="content-toc" aria-label={`${pageLabel} archive navigation`}>
+    {
+      yearGroups.length > 0 ? (
+        <ol class="content-toc-list">
+          {yearGroups.map((group) => (
+            <li class="content-toc-item content-toc-item--depth-2">
+              <a class="content-toc-link content-toc-link--depth-2" href={`#${group.year}`}>
+                {group.year}
+              </a>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="content-toc-empty">No archive yet.</p>
+      )
+    }
+  </aside>
+
+  <FooterMeta slot="footer-info" />
+</HomeLayout>
+
+<style>
+  .archive-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .archive-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .archive-year-heading {
+    margin: 0;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
+    color: var(--line);
+    font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .archive-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .archive-list-item {
+    display: grid;
+    grid-template-columns: minmax(5.6rem, auto) minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: baseline;
+  }
+
+  .archive-item-date {
+    color: color-mix(in srgb, var(--line) 68%, transparent);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .archive-item-link {
+    min-width: 0;
+    color: var(--line);
+    text-decoration: none;
+    line-height: 1.6;
+  }
+
+  .archive-item-link:hover,
+  .archive-item-link:focus-visible {
+    color: #483D8B;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 40rem) {
+    .archive-list-item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.15rem;
+    }
+  }
+</style>

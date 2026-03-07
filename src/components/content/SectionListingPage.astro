@@ -1,30 +1,24 @@
 ---
 import HomeLayout from "../../layouts/HomeLayout.astro";
 import Signature from "../home/signature.astro";
-import ArticleInfoCard from "./ArticleInfoCard.astro";
 import FooterMeta from "../common/FooterMeta.astro";
 import "../../style/pages/content-page.css";
 
-interface ListArticleItem {
-  title: string;
-  description: string;
+interface SectionCategoryEntry {
+  archiveSlug: string;
+  count: number;
   href: string;
-  type: string;
-  createdAt: Date;
-  createdLabel: string;
-}
-
-interface ArticleGroup {
-  type: string;
-  articles: ListArticleItem[];
+  label: string;
 }
 
 interface Props {
+  categories: SectionCategoryEntry[];
   pageLabel: string;
-  groupedArticles: ArticleGroup[];
+  viewAllHref: string;
+  viewAllLabel: string;
 }
 
-const { pageLabel, groupedArticles } = Astro.props as Props;
+const { categories, pageLabel, viewAllHref, viewAllLabel } = Astro.props as Props;
 
 const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g, "-");
 ---
@@ -35,27 +29,24 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
   <section slot="profile" class="content-page content-page--listing" aria-label={`${pageLabel} listing content`}>
     <div class="content-page-body">
       <header class="listing-header">
-        <h1 class="listing-header-title">{pageLabel}</h1>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+          <h1 class="listing-header-title" style="margin:0;">{pageLabel}</h1>
+          <a href={viewAllHref}>{viewAllLabel}</a>
+        </div>
       </header>
 
       {
-        groupedArticles.length > 0 ? (
+        categories.length > 0 ? (
           <div class="listing-groups">
-            {groupedArticles.map((group) => (
-              <section class="listing-group" aria-label={`${group.type} articles`}>
-                <h2 id={toAnchorId(group.type)} class="listing-group-title">{group.type}</h2>
-                <div class="listing-group-items">
-                  {group.articles.map((article) => (
-                    <ArticleInfoCard
-                      title={article.title}
-                      href={article.href}
-                      createdLabel={article.createdLabel}
-                      description={article.description}
-                    />
-                  ))}
-                </div>
-              </section>
-            ))}
+            <ol class="content-toc-list" aria-label={`${pageLabel} categories`}>
+              {categories.map((category) => (
+                <li id={toAnchorId(category.label)} class="content-toc-item content-toc-item--depth-2">
+                  <a class="content-toc-link content-toc-link--depth-2" href={category.href}>
+                    {category.label} ({category.count})
+                  </a>
+                </li>
+              ))}
+            </ol>
           </div>
         ) : (
           <p class="content-toc-empty">No content yet.</p>
@@ -66,12 +57,12 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
 
   <aside slot="latest" class="content-toc" aria-label={`${pageLabel} categories`}>
     {
-      groupedArticles.length > 0 ? (
+      categories.length > 0 ? (
         <ol class="content-toc-list">
-          {groupedArticles.map((group) => (
+          {categories.map((category) => (
             <li class="content-toc-item content-toc-item--depth-2">
-              <a class="content-toc-link content-toc-link--depth-2" href={`#${toAnchorId(group.type)}`}>
-                {group.type}
+              <a class="content-toc-link content-toc-link--depth-2" href={category.href}>
+                {category.label}
               </a>
             </li>
           ))}

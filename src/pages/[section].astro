@@ -1,23 +1,18 @@
 ---
 import SectionListingPage from "../components/content/SectionListingPage.astro";
-import { resolveContentTitle } from "../utils/content-title";
-import { getGitTimestamps } from "../utils/git-timestamps";
 
 interface ContentModule {
   frontmatter?: {
-    title?: string;
-    description?: string;
+    archiveSlug?: string;
     type?: string;
   };
 }
 
-interface ListArticleItem {
-  title: string;
-  description: string;
+interface SectionCategoryEntry {
+  archiveSlug: string;
+  count: number;
   href: string;
-  type: string;
-  createdAt: Date;
-  createdLabel: string;
+  label: string;
 }
 
 const sectionLabels = {
@@ -25,6 +20,22 @@ const sectionLabels = {
   note: "Note",
   project: "Project",
 } as const;
+
+function normalizeArchiveSlug(value?: string) {
+  const normalized = value?.trim().replace(/^\/+|\/+$/g, "") || "";
+  return normalized && !normalized.includes("/") ? normalized : "";
+}
+
+function slugifyCategoryLabel(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[`*_~()[\]{}]/g, "")
+    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 export function getStaticPaths() {
   return ["blog", "note", "project"].map((section) => ({
@@ -42,51 +53,47 @@ const contentModules = import.meta.glob("../content/{blog,note,project}/*.{md,md
   eager: true,
 });
 
-const listArticles = Object.entries(contentModules)
+const categories = Object.entries(contentModules)
   .map(([path, mod]) => {
     const match = path.match(/^\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
     if (!match || match[1] !== section) return null;
 
     const frontmatter = (mod as ContentModule).frontmatter;
-    const title = resolveContentTitle(path, frontmatter?.title);
-    const slug = match[2];
-    const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
-    const publishedAt = createdAt ?? updatedAt;
-
-    if (!publishedAt || Number.isNaN(publishedAt.getTime())) return null;
+    const label = frontmatter?.type?.trim() || "Uncategorized";
+    const archiveSlug = normalizeArchiveSlug(frontmatter?.archiveSlug) || slugifyCategoryLabel(label) || "uncategorized";
 
     return {
-      title,
-      description: frontmatter?.description?.trim() || "",
-      href: `/${section}/${slug}/`,
-      type: frontmatter?.type?.trim() || "Uncategorized",
-      createdAt: publishedAt,
-      createdLabel: new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-      }).format(publishedAt),
-    } satisfies ListArticleItem;
+      archiveSlug,
+      label,
+    };
   })
-  .filter((item): item is ListArticleItem => item !== null)
-  .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  .filter((item): item is { archiveSlug: string; label: string } => item !== null)
+  .reduce<SectionCategoryEntry[]>((entries, item) => {
+    const existingEntry = entries.find((entry) => entry.archiveSlug === item.archiveSlug);
 
-const groupedArticles = listArticles.reduce<Array<{ type: string; articles: ListArticleItem[] }>>((groups, article) => {
-  const existingGroup = groups.find((group) => group.type === article.type);
+    if (existingEntry) {
+      existingEntry.count += 1;
+      return entries;
+    }
 
-  if (existingGroup) {
-    existingGroup.articles.push(article);
-    return groups;
-  }
-
-  groups.push({
-    type: article.type,
-    articles: [article],
-  });
-  return groups;
-}, []);
+    entries.push({
+      archiveSlug: item.archiveSlug,
+      count: 1,
+      href: `/${section}-archive/${item.archiveSlug}/`,
+      label: item.label,
+    });
+    return entries;
+  }, [])
+  .sort((a, b) => a.label.localeCompare(b.label, "en-US"));
 
 const pageLabel = sectionLabels[section as keyof typeof sectionLabels];
+const viewAllHref = `/${section}-archive/`;
+const viewAllLabel = `View all ${pageLabel.toLowerCase()}s`;
 ---
 
-<SectionListingPage pageLabel={pageLabel} groupedArticles={groupedArticles} />
+<SectionListingPage
+  categories={categories}
+  pageLabel={pageLabel}
+  viewAllHref={viewAllHref}
+  viewAllLabel={viewAllLabel}
+/>
