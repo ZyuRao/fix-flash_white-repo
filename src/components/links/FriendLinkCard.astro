@@ -1,0 +1,32 @@
+---
+import "../../style/components/content/app-panel-card.css";
+import type { FriendLinkItem } from "../../config/links";
+
+interface Props extends FriendLinkItem {}
+
+const { name, description, href, avatarSrc } = Astro.props as Props;
+---
+
+<a
+  class="app-panel-item app-panel-item--link"
+  href={href}
+  target="_blank"
+  rel="noreferrer"
+  aria-label={`Visit ${name}`}
+>
+  <img
+    class="app-panel-item-icon"
+    src={avatarSrc}
+    alt=""
+    width="56"
+    height="56"
+    loading="lazy"
+    decoding="async"
+    aria-hidden="true"
+  />
+
+  <span class="app-panel-item-copy">
+    <span class="app-panel-item-name">{name}</span>
+    <span class="app-panel-item-description">{description}</span>
+  </span>
+</a>
