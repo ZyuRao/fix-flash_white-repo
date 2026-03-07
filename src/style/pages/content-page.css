@@ -445,6 +445,11 @@
   overflow-x: hidden;
 }
 
+.content-page--links .content-page-body {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
 .listing-header {
   margin: 0;
   padding-bottom: 1rem;
