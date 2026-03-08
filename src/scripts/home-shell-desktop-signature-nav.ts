@@ -1,10 +1,12 @@
-﻿export function initHomeShellDesktopSignatureNav() {
+﻿import { HOME_SHELL_DESKTOP_MEDIA_QUERY } from "./home-shell-breakpoints";
+
+export function initHomeShellDesktopSignatureNav() {
   const shell = document.querySelector("[data-home-shell-root]");
   const signatureCollapse = shell?.querySelector("[data-home-shell-signature-nav]");
   if (!(signatureCollapse instanceof HTMLDetailsElement)) return;
 
   const signatureCollapseTrigger = signatureCollapse.querySelector(".signature-collapse-trigger");
-  const desktopNavMedia = window.matchMedia("(min-width: 56.25rem)");
+  const desktopNavMedia = window.matchMedia(HOME_SHELL_DESKTOP_MEDIA_QUERY);
   let signatureCollapseCloseTimer = 0;
 
   const syncDesktopSignatureCollapse = () => {

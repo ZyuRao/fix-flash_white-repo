@@ -1,10 +1,12 @@
-﻿export function initHomeShellMobileToc() {
+﻿import { HOME_SHELL_DESKTOP_MEDIA_QUERY } from "./home-shell-breakpoints";
+
+export function initHomeShellMobileToc() {
   const shell = document.querySelector("[data-home-shell-root]");
   const latestArea = shell?.querySelector("[data-home-shell-latest]");
   const toc = latestArea?.querySelector(":scope > .content-toc");
   const fabStack = shell?.querySelector("[data-home-shell-fab]");
   const tocButton = document.getElementById("toc-fab");
-  const tocMedia = window.matchMedia("(min-width: 56.25rem)");
+  const tocMedia = window.matchMedia(HOME_SHELL_DESKTOP_MEDIA_QUERY);
 
   if (!(shell instanceof HTMLElement) || !(latestArea instanceof HTMLElement) || !(toc instanceof HTMLElement) || !(tocButton instanceof HTMLButtonElement)) {
     if (tocButton instanceof HTMLElement) {
