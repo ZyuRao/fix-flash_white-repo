@@ -1,4 +1,4 @@
-﻿---
+---
 import CollectionPageShell from "../layout/CollectionPageShell.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-archive-page.css";
@@ -39,15 +39,15 @@ const { pageLabel, yearGroups } = Astro.props as Props;
 
       {
         yearGroups.length > 0 ? (
-          <div class="archive-groups">
+          <div class="archive-groups collection-archive-groups">
             {yearGroups.map((group) => (
-              <section class="archive-group" aria-label={`${group.year} archive`}>
-                <h2 id={group.year} class="archive-year-heading">{group.year}</h2>
-                <ol class="archive-list" aria-label={`${group.year} timeline`}>
+              <section class="archive-group collection-archive-group" aria-label={`${group.year} archive`}>
+                <h2 id={group.year} class="archive-year-heading collection-archive-year">{group.year}</h2>
+                <ol class="archive-list collection-archive-list" aria-label={`${group.year} timeline`}>
                   {group.articles.map((article) => (
-                    <li class="archive-list-item">
-                      <time class="archive-item-date">{article.createdLabel}</time>
-                      <a class="archive-item-link" href={article.href}>{article.title}</a>
+                    <li class="archive-list-item collection-archive-item">
+                      <time class="archive-item-date collection-archive-date">{article.createdLabel}</time>
+                      <a class="archive-item-link collection-archive-link" href={article.href}>{article.title}</a>
                     </li>
                   ))}
                 </ol>

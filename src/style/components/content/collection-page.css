@@ -1,4 +1,4 @@
-﻿.content-page--listing .content-page-body {
+:is(.content-page--listing, .content-page--collection) .content-page-body {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
