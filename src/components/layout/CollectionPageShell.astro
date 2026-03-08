@@ -1,0 +1,40 @@
+---
+import TocPanel from "../content/TocPanel.astro";
+import ContentShell from "./ContentShell.astro";
+
+interface TocItem {
+  href: string;
+  label: string;
+  depth?: 1 | 2 | 3;
+}
+
+interface Props {
+  contentClass?: string;
+  tocClass?: string;
+  contentAriaLabel: string;
+  tocAriaLabel: string;
+  tocItems: TocItem[];
+  tocEmptyText?: string;
+}
+
+const {
+  contentClass = "content-page content-page--listing",
+  tocClass = "content-toc",
+  contentAriaLabel,
+  tocAriaLabel,
+  tocItems,
+  tocEmptyText,
+} = Astro.props as Props;
+---
+
+<ContentShell
+  variant="default"
+  contentClass={contentClass}
+  tocClass={tocClass}
+  contentAriaLabel={contentAriaLabel}
+  tocAriaLabel={tocAriaLabel}
+>
+  <slot />
+
+  <TocPanel slot="toc" items={tocItems} emptyText={tocEmptyText} />
+</ContentShell>

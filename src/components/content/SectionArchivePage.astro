@@ -1,6 +1,5 @@
 ---
-import ContentShell from "../layout/ContentShell.astro";
-import TocPanel from "./TocPanel.astro";
+import CollectionPageShell from "../layout/CollectionPageShell.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-archive-page.css";
 
@@ -24,11 +23,15 @@ interface Props {
 const { pageLabel, yearGroups } = Astro.props as Props;
 ---
 
-<ContentShell
-  variant="default"
-  contentClass="content-page content-page--listing"
+<CollectionPageShell
   contentAriaLabel={`${pageLabel} archive content`}
   tocAriaLabel={`${pageLabel} archive navigation`}
+  tocEmptyText="No archive yet."
+  tocItems={yearGroups.map((group) => ({
+    href: `#${group.year}`,
+    label: group.year,
+    depth: 2 as const,
+  }))}
 >
       <header class="listing-header">
         <h1 class="listing-header-title">{pageLabel}</h1>
@@ -55,15 +58,4 @@ const { pageLabel, yearGroups } = Astro.props as Props;
           <p class="content-toc-empty">No content yet.</p>
         )
       }
-
-  <Fragment slot="toc">
-    <TocPanel
-      emptyText="No archive yet."
-      items={yearGroups.map((group) => ({
-        href: `#${group.year}`,
-        label: group.year,
-        depth: 2 as const,
-      }))}
-    />
-  </Fragment>
-</ContentShell>
+</CollectionPageShell>
