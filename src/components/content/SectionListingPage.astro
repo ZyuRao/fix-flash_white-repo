@@ -1,4 +1,4 @@
-﻿---
+---
 import CollectionPageShell from "../layout/CollectionPageShell.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-listing-page.css";
@@ -23,7 +23,7 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
 ---
 
 <CollectionPageShell
-  tocClass="content-toc content-toc--listing"
+  tocClass="content-toc content-toc--collection content-toc--listing"
   contentAriaLabel={`${pageLabel} listing content`}
   tocAriaLabel={`${pageLabel} categories`}
   tocEmptyText="No categories yet."

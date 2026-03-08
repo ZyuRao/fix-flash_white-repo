@@ -1,4 +1,4 @@
-.listing-header-bar {
+:is(.listing-header-bar, .collection-page-header-bar) {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6,11 +6,11 @@
   flex-wrap: wrap;
 }
 
-.listing-header-title--compact {
+:is(.listing-header-title--compact, .collection-page-title--compact) {
   margin: 0;
 }
 
-.content-page-body .listing-view-all-link {
+.content-page-body :is(.listing-view-all-link, .collection-page-view-all-link) {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -21,41 +21,41 @@
   white-space: nowrap;
 }
 
-.content-page-body .listing-view-all-link:hover,
-.content-page-body .listing-view-all-link:focus-visible {
+.content-page-body :is(.listing-view-all-link, .collection-page-view-all-link):hover,
+.content-page-body :is(.listing-view-all-link, .collection-page-view-all-link):focus-visible {
   color: var(--accent);
 }
 
-.listing-groups .content-toc-link,
-.listing-groups .content-toc-link--depth-2 {
+:is(.listing-groups, .collection-page-groups) .content-toc-link,
+:is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2 {
   color: var(--line);
   opacity: 1;
   text-decoration-color: transparent;
 }
 
-.listing-groups .content-toc-link:hover,
-.listing-groups .content-toc-link:focus-visible,
-.listing-groups .content-toc-link--depth-2:hover,
-.listing-groups .content-toc-link--depth-2:focus-visible {
+:is(.listing-groups, .collection-page-groups) .content-toc-link:hover,
+:is(.listing-groups, .collection-page-groups) .content-toc-link:focus-visible,
+:is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2:hover,
+:is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2:focus-visible {
   color: var(--accent);
   text-decoration-color: color-mix(in srgb, var(--accent) 32%, transparent);
 }
 
-.listing-groups > .content-toc-list {
+:is(.listing-groups, .collection-page-groups) > .content-toc-list {
   padding-left: 0;
   overflow-x: hidden;
 }
 
-.listing-groups > .content-toc-list > .content-toc-item,
-.listing-groups > .content-toc-list > .content-toc-item--depth-2 {
+:is(.listing-groups, .collection-page-groups) > .content-toc-list > .content-toc-item,
+:is(.listing-groups, .collection-page-groups) > .content-toc-list > .content-toc-item--depth-2 {
   padding-left: 0;
   min-width: 0;
 }
 
-.listing-groups .content-toc-link,
-.listing-groups .content-toc-link--depth-2,
-.content-toc--listing .content-toc-link,
-.content-toc--listing .content-toc-link--depth-2 {
+:is(.listing-groups, .collection-page-groups) .content-toc-link,
+:is(.listing-groups, .collection-page-groups) .content-toc-link--depth-2,
+:is(.content-toc--listing, .content-toc--collection) .content-toc-link,
+:is(.content-toc--listing, .content-toc--collection) .content-toc-link--depth-2 {
   display: block;
   max-width: 100%;
   min-width: 0;
@@ -64,9 +64,9 @@
   white-space: nowrap;
 }
 
-.content-toc--listing,
-.content-toc--listing .content-toc-list,
-.content-toc--listing .content-toc-item {
+:is(.content-toc--listing, .content-toc--collection),
+:is(.content-toc--listing, .content-toc--collection) .content-toc-list,
+:is(.content-toc--listing, .content-toc--collection) .content-toc-item {
   min-width: 0;
   overflow-x: hidden;
 }
