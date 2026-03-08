@@ -1,5 +1,6 @@
 ﻿---
 import ContentShell from "../components/layout/ContentShell.astro";
+import TocPanel from "../components/content/TocPanel.astro";
 import { extractTocHeadings, type TocHeading } from "../utils/toc";
 import "../style/pages/content-page.css";
 
@@ -33,28 +34,13 @@ const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
   <AboutContent />
 
   <Fragment slot="toc">
-    {
-      tocHeadings.length > 0 ? (
-        <>
-          <p class="content-toc-title">Contents</p>
-          <ol class="content-toc-list">
-            {tocHeadings.map((heading) => (
-              <li
-                class:list={[
-                  "content-toc-item",
-                  `content-toc-item--depth-${heading.depth}`,
-                ]}
-              >
-                <a class={`content-toc-link content-toc-link--depth-${heading.depth}`} href={`#${heading.slug}`}>
-                  {heading.text}
-                </a>
-              </li>
-            ))}
-          </ol>
-        </>
-      ) : (
-        <p class="content-toc-empty">No headings yet.</p>
-      )
-    }
+    <TocPanel
+      title="Contents"
+      items={tocHeadings.map((heading) => ({
+        href: `#${heading.slug}`,
+        label: heading.text,
+        depth: heading.depth,
+      }))}
+    />
   </Fragment>
 </ContentShell>

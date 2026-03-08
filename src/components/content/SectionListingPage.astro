@@ -1,5 +1,6 @@
 ---
 import ContentShell from "../layout/ContentShell.astro";
+import TocPanel from "./TocPanel.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-listing-page.css";
 
@@ -58,21 +59,14 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
       }
 
   <Fragment slot="toc">
-    {
-      categories.length > 0 ? (
-        <ol class="content-toc-list">
-          {categories.map((category) => (
-            <li class="content-toc-item content-toc-item--depth-2">
-              <a class="content-toc-link content-toc-link--depth-2" href={category.href}>
-                {category.label}
-              </a>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p class="content-toc-empty">No categories yet.</p>
-      )
-    }
+    <TocPanel
+      emptyText="No categories yet."
+      items={categories.map((category) => ({
+        href: category.href,
+        label: category.label,
+        depth: 2 as const,
+      }))}
+    />
   </Fragment>
 </ContentShell>
 

@@ -1,5 +1,6 @@
 ---
 import ContentShell from "../layout/ContentShell.astro";
+import TocPanel from "./TocPanel.astro";
 import "../../style/pages/content-page.css";
 import "../../style/components/content/section-archive-page.css";
 
@@ -56,20 +57,13 @@ const { pageLabel, yearGroups } = Astro.props as Props;
       }
 
   <Fragment slot="toc">
-    {
-      yearGroups.length > 0 ? (
-        <ol class="content-toc-list">
-          {yearGroups.map((group) => (
-            <li class="content-toc-item content-toc-item--depth-2">
-              <a class="content-toc-link content-toc-link--depth-2" href={`#${group.year}`}>
-                {group.year}
-              </a>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p class="content-toc-empty">No archive yet.</p>
-      )
-    }
+    <TocPanel
+      emptyText="No archive yet."
+      items={yearGroups.map((group) => ({
+        href: `#${group.year}`,
+        label: group.year,
+        depth: 2 as const,
+      }))}
+    />
   </Fragment>
 </ContentShell>
