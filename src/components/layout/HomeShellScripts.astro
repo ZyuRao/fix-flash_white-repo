@@ -242,9 +242,11 @@
 
         if (!(contentPage instanceof HTMLElement)) return;
 
+        contentPage.dataset.contentEntranceEnabled = "true";
         contentPage.dataset.pageEntrance = "ready";
 
         if (toc instanceof HTMLElement) {
+          toc.dataset.contentEntranceEnabled = "true";
           toc.dataset.tocEntrance = "ready";
 
           const tocItems = Array.from(toc.querySelectorAll(".content-toc-item"));
@@ -293,8 +295,7 @@
       const initContentToc = () => {
         const toc = document.querySelector(".content-toc");
         const tocList = toc?.querySelector(".content-toc-list");
-        const contentBody = document.querySelector(".content-page-body");
-        if (!(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement) || !(contentBody instanceof HTMLElement)) return;
+        if (!(toc instanceof HTMLElement) || !(tocList instanceof HTMLElement)) return;
 
         let tocEntranceSettled = toc.dataset.tocEntrance !== "ready";
 
@@ -314,75 +315,10 @@
 
         if (headingEntries.length === 0) return;
 
-        let progress = tocList.querySelector(".content-toc-progress");
-        if (!(progress instanceof HTMLElement)) {
-          progress = document.createElement("span");
-          progress.className = "content-toc-progress";
-          progress.setAttribute("aria-hidden", "true");
-          tocList.prepend(progress);
-        }
-
-        let scrollbar = toc.querySelector(".content-toc-scrollbar");
-        if (!(scrollbar instanceof HTMLElement)) {
-          scrollbar = document.createElement("div");
-          scrollbar.className = "content-toc-scrollbar";
-          scrollbar.setAttribute("aria-hidden", "true");
-          toc.append(scrollbar);
-        }
-
-        let scrollbarThumb = scrollbar.querySelector(".content-toc-scrollbar-thumb");
-        if (!(scrollbarThumb instanceof HTMLElement)) {
-          scrollbarThumb = document.createElement("span");
-          scrollbarThumb.className = "content-toc-scrollbar-thumb";
-          scrollbar.append(scrollbarThumb);
-        }
-
-        toc.classList.add("has-progress");
-        toc.classList.remove("has-progress-positioned");
-        toc.classList.remove("has-progress-animated");
-
         let frameId = 0;
-        let isDraggingScrollbar = false;
-
-        const syncScrollbar = () => {
-          if (!(scrollbar instanceof HTMLElement) || !(scrollbarThumb instanceof HTMLElement)) return;
-
-          const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
-          if (maxScrollTop <= 0) {
-            toc.classList.remove("has-scrollbar");
-            scrollbarThumb.style.height = "0px";
-            scrollbarThumb.style.transform = "translate3d(0, 0, 0)";
-            return;
-          }
-
-          toc.classList.add("has-scrollbar");
-          const trackHeight = scrollbar.clientHeight;
-          const thumbHeight = Math.max(34, Math.min(trackHeight, (contentBody.clientHeight / contentBody.scrollHeight) * trackHeight));
-          const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
-          const ratio = maxScrollTop === 0 ? 0 : contentBody.scrollTop / maxScrollTop;
-          const thumbTop = ratio * maxThumbTop;
-
-          scrollbarThumb.style.height = `${thumbHeight}px`;
-          scrollbarThumb.style.transform = `translate3d(0, ${thumbTop}px, 0)`;
-        };
-
-        const scrollFromScrollbarPointer = (clientY) => {
-          if (!(scrollbar instanceof HTMLElement) || !(scrollbarThumb instanceof HTMLElement)) return;
-          const trackRect = scrollbar.getBoundingClientRect();
-          const thumbHeight = scrollbarThumb.offsetHeight;
-          const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
-          const maxThumbTop = Math.max(0, trackRect.height - thumbHeight);
-          const rawThumbTop = clientY - trackRect.top - thumbHeight / 2;
-          const nextThumbTop = Math.min(Math.max(0, rawThumbTop), maxThumbTop);
-          const ratio = maxThumbTop === 0 ? 0 : nextThumbTop / maxThumbTop;
-          contentBody.scrollTop = ratio * maxScrollTop;
-          syncScrollbar();
-        };
 
         const getHeadingOffset = (heading) => {
-          const headingRect = heading.getBoundingClientRect();
-          const bodyRect = contentBody.getBoundingClientRect();
-          return headingRect.top - bodyRect.top + contentBody.scrollTop;
+          return heading.getBoundingClientRect().top + window.scrollY;
         };
 
         const getOffsetWithin = (element, ancestor) => {
@@ -406,8 +342,8 @@
         };
 
         const updateContentToc = () => {
-          const viewportTop = contentBody.scrollTop;
-          const viewportBottom = viewportTop + contentBody.clientHeight;
+          const viewportTop = window.scrollY;
+          const viewportBottom = viewportTop + window.innerHeight;
           const visibleEntries = headingEntries.filter((entry) => {
             const headingTop = getHeadingOffset(entry.heading);
             const headingBottom = headingTop + entry.heading.offsetHeight;
@@ -435,27 +371,8 @@
           });
 
           const activeItem = activeEntry.link.closest(".content-toc-item");
-          if (!(activeItem instanceof HTMLElement) || !(progress instanceof HTMLElement)) {
-            syncScrollbar();
+          if (!(activeItem instanceof HTMLElement)) {
             return;
-          }
-
-          const itemOffset = getOffsetWithin(activeItem, tocList);
-          const linkOffset = getOffsetWithin(activeEntry.link, tocList);
-          const markerHeight = Math.max(12, Math.min(18, Math.round(activeEntry.link.offsetHeight * 0.7)));
-          const markerTop = itemOffset.top + (activeItem.offsetHeight - markerHeight) / 2;
-          const markerLeft = Math.max(0, linkOffset.left - 10);
-
-          progress.style.height = `${markerHeight}px`;
-          progress.style.left = `${markerLeft}px`;
-          progress.style.transform = `translate3d(0, ${markerTop}px, 0)`;
-
-          if (!toc.classList.contains("has-progress-positioned")) {
-            toc.classList.add("has-progress-positioned");
-
-            requestAnimationFrame(() => {
-              toc.classList.add("has-progress-animated");
-            });
           }
 
           const tocScrollContainer = getTocScrollContainer();
@@ -466,10 +383,8 @@
 
           tocScrollContainer.scrollTo({
             top: nextTocScrollTop,
-            behavior: isDraggingScrollbar ? "auto" : "smooth",
+            behavior: "smooth",
           });
-
-          syncScrollbar();
         };
 
         const queueContentTocUpdate = () => {
@@ -485,14 +400,9 @@
         headingEntries.forEach((entry) => {
           entry.link.addEventListener("click", (event) => {
             event.preventDefault();
-            const headingTop = getHeadingOffset(entry.heading);
-            const centeredTop = headingTop - (contentBody.clientHeight - entry.heading.offsetHeight) / 2;
-            const maxScrollTop = Math.max(0, contentBody.scrollHeight - contentBody.clientHeight);
-            const nextScrollTop = Math.min(Math.max(0, centeredTop), maxScrollTop);
-
-            contentBody.scrollTo({
-              top: nextScrollTop,
+            entry.heading.scrollIntoView({
               behavior: "smooth",
+              block: "start",
             });
 
             if (history.replaceState) {
@@ -503,46 +413,7 @@
           });
         });
 
-        scrollbar?.addEventListener("pointerdown", (event) => {
-          if (!(scrollbarThumb instanceof HTMLElement)) return;
-          const target = event.target;
-          if (target === scrollbarThumb) return;
-          event.preventDefault();
-          scrollFromScrollbarPointer(event.clientY);
-          queueContentTocUpdateWhenReady();
-        });
-
-        scrollbarThumb?.addEventListener("pointerdown", (event) => {
-          if (!(scrollbarThumb instanceof HTMLElement)) return;
-          event.preventDefault();
-          isDraggingScrollbar = true;
-          scrollbarThumb.classList.add("is-dragging");
-          scrollbarThumb.setPointerCapture(event.pointerId);
-          scrollFromScrollbarPointer(event.clientY);
-        });
-
-        scrollbarThumb?.addEventListener("pointermove", (event) => {
-          if (!isDraggingScrollbar) return;
-          event.preventDefault();
-          scrollFromScrollbarPointer(event.clientY);
-          queueContentTocUpdateWhenReady();
-        });
-
-        const stopScrollbarDrag = (event) => {
-          if (!(scrollbarThumb instanceof HTMLElement)) return;
-          if (!isDraggingScrollbar) return;
-          isDraggingScrollbar = false;
-          scrollbarThumb.classList.remove("is-dragging");
-          if (event instanceof PointerEvent && scrollbarThumb.hasPointerCapture(event.pointerId)) {
-            scrollbarThumb.releasePointerCapture(event.pointerId);
-          }
-          queueContentTocUpdateWhenReady();
-        };
-
-        scrollbarThumb?.addEventListener("pointerup", stopScrollbarDrag);
-        scrollbarThumb?.addEventListener("pointercancel", stopScrollbarDrag);
-
-        contentBody.addEventListener("scroll", queueContentTocUpdateWhenReady, { passive: true });
+        window.addEventListener("scroll", queueContentTocUpdateWhenReady, { passive: true });
         window.addEventListener("resize", queueContentTocUpdateWhenReady);
         window.addEventListener("load", queueContentTocUpdateWhenReady, { once: true });
         document.addEventListener("content-toc:refresh", () => {
@@ -574,4 +445,3 @@
 
       media.addEventListener("change", handleSystemThemeChange);
 </script>
-

@@ -8,11 +8,19 @@
 - 是否存在不必要的固定高度、裁切与滚动锁定
 - 是否存在影响内容可见性和可维护性的视觉优先实现
 
+## 状态标记
+
+- `[ ]` 未处理
+- `[~]` 处理中 / 已提交修复待复核
+- `[x]` 已处理
+
 ---
 
 ## 第一轮：首页主布局壳层
 
 ### 1. 整页滚动被锁死
+
+状态：`[x] 已处理（已复核）`
 
 - `src/style/layouts/home-layout.css:72`
   - `html` 使用 `overflow: hidden`
@@ -27,6 +35,8 @@
 
 ### 2. 首页外层被做成固定视口壳
 
+状态：`[x] 已处理（代码复核通过）`
+
 - `src/style/layouts/home-layout.css:88`
   - `.home-shell` 使用 `height: 100dvh`
 - `src/style/layouts/home-layout.css:96`
@@ -39,6 +49,8 @@
 - footer 容易出现“上顶”视觉问题
 
 ### 3. 主内容区依赖固定视口网格
+
+状态：`[~] 已提交修复，待复核`
 
 - `src/style/layouts/home-layout.css:94`
   - `grid-template-rows: auto minmax(0, 1fr) auto`
@@ -64,6 +76,8 @@
 
 ### 5. 宽度约束绑定视口高度
 
+状态：`[ ] 未处理`
+
 - `src/style/layouts/home-layout.css:90`
   - `width: min(100%, var(--shell-max), calc(100dvh * var(--layout-max-ratio)))`
 
@@ -72,11 +86,25 @@
 - 用视口高度推导页面宽度并不主流
 - 横竖屏变化、开发者工具缩放时更容易出现奇怪比例
 
+### 6. 整页滚动边界存在回弹感
+
+状态：`[x] 已处理（已复核）`
+
+- `src/style/layouts/home-layout.css`
+  - `html` / `body` 已补充 `overscroll-behavior-y: none`
+
+问题：
+
+- 页面滚动到顶部或底部时，会出现继续拖动再弹回的边界回弹感
+- 在当前项目目标里，这种交互不符合预期
+
 ---
 
 ## 第二轮：首页内容区内部
 
 ### 1. Profile 区继续依赖父容器高度
+
+状态：`[~] 已提交修复，待复核`
 
 - `src/style/components/home/profile.css:13`
   - `.profile-card` 使用 `height: 100%`
@@ -88,6 +116,8 @@
 
 ### 2. Profile 整体人为位移
 
+状态：`[~] 已提交修复，待复核`
+
 - `src/style/components/home/profile.css:22`
   - `transform: translate(...)`
 
@@ -97,6 +127,8 @@
 - 在不同视口高度下更容易造成上下区域压迫感
 
 ### 3. Latest 区继续被锁在固定高度体系里
+
+状态：`[~] 已提交修复，待复核`
 
 - `src/style/components/home/latest-articles.css:11`
   - `.latest-articles` 使用 `height: 100%`
@@ -108,6 +140,8 @@
 
 ### 4. Latest 面板直接裁切内容
 
+状态：`[~] 已提交修复，待复核`
+
 - `src/style/components/home/latest-articles.css:25`
   - `.latest-articles-panel` 使用 `overflow: hidden`
 
@@ -118,6 +152,8 @@
 
 ### 5. 文章标题过早截断
 
+状态：`[~] 已提交修复，待复核`
+
 - `src/style/components/home/latest-articles.css:140`
 - `src/style/components/home/latest-articles.css:142`
 
@@ -127,6 +163,8 @@
 - 中文标题在首页列表中很容易损失关键信息
 
 ### 6. 移动端 Latest 列表宽度策略不主流
+
+状态：`[x] 已处理（已复核）`
 
 - `src/style/components/home/latest-articles.css:220`
   - 列表容器使用 `width: fit-content`
@@ -140,6 +178,8 @@
 
 ### 7. 首页动画默认先隐藏内容
 
+状态：`[x] 已处理（已复核）`
+
 - `src/style/pages/home-page-entrance.css:1`
 - `src/style/pages/home-page-entrance.css:64`
 - `src/style/pages/home-page-entrance.css:118`
@@ -151,6 +191,8 @@
 - 如果脚本异常、慢执行或被阻断，首页会先出现空白或内容延迟出现
 
 ### 8. Signature、CodeTime、Heatmap 都在放大高度波动
+
+状态：`[x] 已处理（已复核）`
 
 - `src/style/components/home/signature.css:7`
   - `min-height: 100%`
@@ -194,6 +236,8 @@
 
 ### 2. 原生滚动条被整体隐藏，并用自定义滚动条替代
 
+状态：`[x] 已处理（已复核）`
+
 - `src/style/pages/content-page.css:235`
 - `src/style/pages/content-page.css:242`
 - `src/style/pages/content-page.css:276`
@@ -205,6 +249,8 @@
 - 对主流博客/文章页面来说，这类复杂度通常没有必要
 
 ### 3. 内容页入场动画再次采用“默认隐藏内容”
+
+状态：`[x] 已处理（已复核）`
 
 - `src/style/pages/content-page.css:22`
 - `src/style/pages/content-page.css:152`
@@ -218,6 +264,8 @@
 
 ### 4. 目录侧栏视觉复杂度偏高
 
+状态：`[x] 已处理（已复核）`
+
 - `src/style/pages/content-page.css:252`
 - `src/style/pages/content-page.css:276`
 - `src/style/pages/content-page.css:293`
@@ -230,6 +278,8 @@
 
 ### 5. 移动端目录抽屉过重
 
+状态：`[x] 已处理（已复核）`
+
 - `src/style/pages/content-page.css:622`
 - `src/style/pages/content-page.css:629`
 - `src/style/pages/content-page.css:647`
@@ -241,6 +291,8 @@
 - 这更像应用侧边栏，而不是主流博客常见的轻量目录/返回顶部辅助
 
 ### 6. 列表卡片摘要被强制单行截断
+
+状态：`[~] 已提交修复，待复核`
 
 - `src/style/pages/content-page.css:554`
 - `src/style/pages/content-page.css:559`

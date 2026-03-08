@@ -1,12 +1,19 @@
 .codetime-link {
-  display: inline-flex;
-  max-width: 100%;
+  display: block;
+  width: 100%;
+  max-width: 9.5rem;
   line-height: 0;
 }
 
 .codetime-link img {
   display: block;
-  width: clamp(6rem, 5.5rem + 5vw, 20rem);
+  width: 100%;
   max-width: 100%;
   height: auto;
+}
+
+@media (min-width: 48rem) {
+  .codetime-link {
+    max-width: 11rem;
+  }
 }

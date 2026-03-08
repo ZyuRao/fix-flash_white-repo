@@ -1,0 +1,64 @@
+.archive-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.archive-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.archive-year-heading {
+  margin: 0;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 14%, transparent);
+  color: var(--line);
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.archive-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.archive-list-item {
+  display: grid;
+  grid-template-columns: minmax(5.6rem, auto) minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: baseline;
+}
+
+.archive-item-date {
+  color: color-mix(in srgb, var(--line) 68%, transparent);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.archive-item-link {
+  min-width: 0;
+  color: var(--line);
+  text-decoration: none;
+  line-height: 1.6;
+}
+
+.archive-item-link:hover,
+.archive-item-link:focus-visible {
+  color: #483D8B;
+  text-decoration: underline;
+}
+
+@media (max-width: 40rem) {
+  .archive-list-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.15rem;
+  }
+}

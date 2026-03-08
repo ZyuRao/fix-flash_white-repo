@@ -67,33 +67,35 @@
 }
 
 html {
-  height: 100%;
   font-size: var(--font-size-base);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: none;
 }
 
 body {
-  height: 100%;
   margin: 0;
+  min-height: 100dvh;
   background: transparent;
   color: var(--line);
   line-height: 1.5;
   font-family: "Biotif", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .home-shell {
   position: relative;
   z-index: 1;
-  height: 100dvh;
-  min-height: 100dvh;
-  width: min(100%, var(--shell-max), calc(100dvh * var(--layout-max-ratio)));
+  height: auto;
+  min-height: 0;
+  width: min(100%, var(--shell-max));
   margin-inline: auto;
   padding: var(--space);
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  display: flex;
+  flex-direction: column;
   gap: var(--space);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .home-header {
@@ -411,24 +413,25 @@ body {
 }
 
 .home-main {
+  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--main-col-gap);
   margin-top: calc(var(--header-main-gap) - var(--space));
   min-height: 0;
-  align-items: stretch;
+  align-items: start;
 }
 
 .side-nav-area {
   display: none;
   min-height: 0;
-  height: var(--main-mobile-h);
-  max-height: var(--main-mobile-h);
-  overflow: hidden;
+  height: auto;
+  max-height: none;
+  overflow: visible;
 }
 
 .side-nav-stack {
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -437,20 +440,20 @@ body {
 
 .profile-area {
   min-height: 0;
-  height: var(--main-mobile-h);
-  max-height: var(--main-mobile-h);
+  height: auto;
+  max-height: none;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .latest-area {
   min-height: 0;
-  height: var(--main-mobile-h);
-  max-height: var(--main-mobile-h);
+  height: auto;
+  max-height: none;
   grid-column: 1 / -1;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .home-footer {
@@ -562,30 +565,30 @@ body {
 
   .home-main {
     min-height: 0;
-    align-self: stretch;
+    align-self: start;
   }
 
   .side-nav-area {
     display: block;
     min-height: 0;
-    height: 100%;
+    height: auto;
     max-height: none;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .profile-area,
   .latest-area {
     min-height: 0;
-    height: 100%;
+    height: auto;
     max-height: none;
   }
 
   .latest-area {
     grid-column: auto;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: visible;
   }
 }
 
@@ -647,14 +650,12 @@ body {
   html,
   body {
     height: auto;
-    min-height: 100%;
     overflow-x: hidden;
-    overflow-y: auto;
   }
 
   .home-shell {
     height: auto;
-    min-height: 100dvh;
+    min-height: 0;
     overflow: visible;
   }
 

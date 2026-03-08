@@ -1,6 +1,7 @@
 .githeatmap-link {
   display: block;
-  width: min(100%, clamp(17rem, 16rem + 20vw, 32rem));
+  width: 100%;
+  max-width: 16rem;
   text-decoration: none;
   line-height: 0;
 }
@@ -9,4 +10,10 @@
   display: block;
   width: 100%;
   height: auto;
+}
+
+@media (min-width: 48rem) {
+  .githeatmap-link {
+    max-width: 18rem;
+  }
 }
