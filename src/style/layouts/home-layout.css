@@ -569,7 +569,8 @@ body {
 
   .home-main {
     min-height: 0;
-    align-self: start;
+    width: 100%;
+    align-self: stretch;
   }
 
   .side-nav-area {
