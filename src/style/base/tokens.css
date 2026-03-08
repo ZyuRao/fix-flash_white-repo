@@ -1,4 +1,4 @@
-@font-face {
+﻿@font-face {
   font-family: "Biotif";
   src: url("/fonts/Biotif-Regular.ttf") format("truetype");
   font-weight: 400;
@@ -37,14 +37,11 @@
   --border-soft: color-mix(in srgb, var(--line) 14%, transparent);
   --text-muted: color-mix(in srgb, var(--line) 68%, transparent);
   --radius-md: 1rem;
-  --layout-max-ratio: 1.44;
   --font-size-base: clamp(0.9375rem, 1.35vw, 1.8rem);
   --shell-max: min(92vw, 112.5rem);
   --space: clamp(0.1rem, 0.2vw, 1.25rem);
   --header-main-gap: clamp(1.25rem, 1.4vw, 2.75rem);
   --footer-height: clamp(0.5rem, 1vh, 1rem);
-  --main-mobile-h: clamp(21rem, 46vh, 35rem);
-  --main-desktop-h: clamp(28.5rem, 72vh, 80rem);
   --main-col-1-min: 7.5rem;
   --main-col-2-min: 7.5rem;
   --main-col-3-min: 7.5rem;
