@@ -6,17 +6,18 @@ import { site } from "../../config/site";
 
 interface Props {
   pathname: string;
+  background?: "home" | "code-rain" | "constellation";
 }
 
-const { pathname } = Astro.props as Props;
-const isAboutPage = pathname === "/about";
-const isLinksPage = pathname === "/links";
+const { pathname, background } = Astro.props as Props;
+const resolvedBackground =
+  background ?? (pathname === "/about" ? "code-rain" : pathname === "/links" ? "constellation" : "home");
 ---
 
 {
-  isAboutPage ? (
+  resolvedBackground === "code-rain" ? (
     <CodeRainBackground slot="background" keywords={site.profile.codeRainKeywords} />
-  ) : isLinksPage ? (
+  ) : resolvedBackground === "constellation" ? (
     <ConstellationBackground slot="background" />
   ) : (
     <HomeBackground slot="background" mode="light" />

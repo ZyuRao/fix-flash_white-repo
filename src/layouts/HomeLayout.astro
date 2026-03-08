@@ -10,12 +10,16 @@ import { site } from "../config/site";
 interface Props {
   mainCol2Fr?: string;
   mainCol3Fr?: string;
+  variant?: "default" | "article";
+  background?: "home" | "code-rain" | "constellation";
 }
 
-const { mainCol2Fr, mainCol3Fr } = Astro.props as Props;
+const { mainCol2Fr, mainCol3Fr, variant, background } = Astro.props as Props;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const pathSegments = pathname.split("/").filter(Boolean);
-const shellVariant = pathSegments.length > 1 ? "article" : "default";
+const shellVariant = variant ?? (pathSegments.length > 1 ? "article" : "default");
+const backgroundVariant =
+  background ?? (pathname === "/about" ? "code-rain" : pathname === "/links" ? "constellation" : "home");
 const foldedNavItems = site.nav;
 const githubUsername = (site.contact.githubUsername || site.profile.githubUsername).trim();
 const githubHref = githubUsername
@@ -30,7 +34,7 @@ const shellStyle = [
 ---
 
 <BaseLayout>
-  <HomeShellBackground slot="background" pathname={pathname} />
+  <HomeShellBackground slot="background" pathname={pathname} background={backgroundVariant} />
   <HomeShellFrame
     foldedNavItems={foldedNavItems}
     githubHref={githubHref}
