@@ -43,9 +43,30 @@
 
 .listing-groups > .content-toc-list {
   padding-left: 0;
+  overflow-x: hidden;
 }
 
 .listing-groups > .content-toc-list > .content-toc-item,
 .listing-groups > .content-toc-list > .content-toc-item--depth-2 {
   padding-left: 0;
+  min-width: 0;
+}
+
+.listing-groups .content-toc-link,
+.listing-groups .content-toc-link--depth-2,
+.content-toc--listing .content-toc-link,
+.content-toc--listing .content-toc-link--depth-2 {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content-toc--listing,
+.content-toc--listing .content-toc-list,
+.content-toc--listing .content-toc-item {
+  min-width: 0;
+  overflow-x: hidden;
 }

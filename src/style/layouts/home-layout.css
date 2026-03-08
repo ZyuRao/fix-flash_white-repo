@@ -59,6 +59,8 @@
   --icon-btn-size: clamp(2.25rem, 3vw, 3.75rem);
   --icon-size: clamp(1.4rem, 2vw, 2.25rem);
   --signature-link-size: clamp(1rem, 1.4vw, 1.45rem);
+  --layout-sticky-top: max(clamp(0.35rem, 1vw, 0.75rem), env(safe-area-inset-top));
+  --layout-sticky-main-top: clamp(4.4rem, 8vw, 6.4rem);
 }
 
 :root[data-theme="dark"] {
@@ -101,6 +103,9 @@ body {
 }
 
 .home-header {
+  position: sticky;
+  top: var(--layout-sticky-top);
+  z-index: 30;
   padding-top: clamp(0.55rem, 1vw, 0.85rem);
   padding-right: clamp(0.55rem, 1vw, 0.85rem);
   padding-bottom: 0;
@@ -573,9 +578,12 @@ body {
 
   .side-nav-area {
     display: block;
+    position: sticky;
+    top: var(--layout-sticky-main-top);
+    align-self: start;
     min-height: 0;
     height: auto;
-    max-height: none;
+    max-height: calc(100dvh - var(--layout-sticky-main-top) - var(--space));
     overflow: visible;
   }
 
@@ -594,6 +602,7 @@ body {
     overflow: visible;
   }
 }
+
 
 @media (min-width: 150rem) {
   :root {

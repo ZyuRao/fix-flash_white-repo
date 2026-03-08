@@ -59,7 +59,7 @@ const toAnchorId = (value: string) => value.toLowerCase().trim().replace(/\s+/g,
     </div>
   </section>
 
-  <aside slot="latest" class="content-toc" aria-label={`${pageLabel} categories`}>
+  <aside slot="latest" class="content-toc content-toc--listing" aria-label={`${pageLabel} categories`}>
     {
       categories.length > 0 ? (
         <ol class="content-toc-list">
