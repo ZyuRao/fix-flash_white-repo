@@ -1,4 +1,4 @@
----
+﻿---
 import Icon from "../../components/ui/Icon.astro";
 import RssIcon from "../../components/ui/icons/RssIcon.astro";
 import FloatingActionButton from "../../components/ui/FloatingActionButton.astro";
@@ -24,7 +24,11 @@ const {
 } = Astro.props as Props;
 ---
 
-<div class:list={["home-shell", shellVariant !== "default" && `home-shell--${shellVariant}`]} style={shellStyle || undefined}>
+<div
+  class:list={["home-shell", shellVariant !== "default" && `home-shell--${shellVariant}`]}
+  style={shellStyle || undefined}
+  data-home-shell-root
+>
   <header class="home-header">
     <div class="wire-box signature-area" aria-label="Signature area">
       <div class="signature-stack">
@@ -43,7 +47,7 @@ const {
       <button type="button" class="search-btn" aria-label="Search">
         <Icon svg={Search} />
       </button>
-      <details class="nav-drawer mobile-nav-drawer">
+      <details class="nav-drawer mobile-nav-drawer" data-home-shell-mobile-nav>
         <summary class="hamburger" aria-label="Toggle navigation">
           <Icon svg={AlignLeft} />
         </summary>
@@ -90,12 +94,12 @@ const {
       <slot name="profile" />
     </section>
 
-    <section class="wire-box latest-area" aria-label="Latest area">
+    <section class="wire-box latest-area" aria-label="Latest area" data-home-shell-latest>
       <slot name="latest" />
     </section>
   </main>
 
-  <div class="floating-action-stack" aria-label="Page controls" hidden>
+  <div class="floating-action-stack" aria-label="Page controls" hidden data-home-shell-fab>
     <FloatingActionButton
       id="toc-fab"
       label="Toggle table of contents"
