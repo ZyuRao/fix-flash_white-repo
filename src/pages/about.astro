@@ -1,6 +1,5 @@
 ﻿---
-import ContentShell from "../components/layout/ContentShell.astro";
-import TocPanel from "../components/content/TocPanel.astro";
+import DocumentPageShell from "../components/layout/DocumentPageShell.astro";
 import { extractTocHeadings, type TocHeading } from "../utils/toc";
 import "../style/pages/content-page.css";
 
@@ -30,17 +29,16 @@ const AboutContent = aboutModule.default;
 const tocHeadings = extractTocHeadings(aboutRawSource ?? "");
 ---
 
-<ContentShell background="code-rain" contentAriaLabel="About content" tocAriaLabel="About table of contents">
+<DocumentPageShell
+  background="code-rain"
+  contentAriaLabel="About content"
+  tocAriaLabel="About table of contents"
+  tocTitle="Contents"
+  tocItems={tocHeadings.map((heading) => ({
+    href: `#${heading.slug}`,
+    label: heading.text,
+    depth: heading.depth,
+  }))}
+>
   <AboutContent />
-
-  <Fragment slot="toc">
-    <TocPanel
-      title="Contents"
-      items={tocHeadings.map((heading) => ({
-        href: `#${heading.slug}`,
-        label: heading.text,
-        depth: heading.depth,
-      }))}
-    />
-  </Fragment>
-</ContentShell>
+</DocumentPageShell>

@@ -1,6 +1,5 @@
 ---
-import ContentShell from "../layout/ContentShell.astro";
-import TocPanel from "./TocPanel.astro";
+import DocumentPageShell from "../layout/DocumentPageShell.astro";
 import "../../style/pages/content-page.css";
 
 interface TocHeading {
@@ -40,11 +39,16 @@ const {
 } = Astro.props as Props;
 ---
 
-<ContentShell
+<DocumentPageShell
   variant="article"
   contentClass="content-page content-page--article"
   contentAriaLabel={`${section} article content`}
   tocAriaLabel={`${section} table of contents`}
+  tocItems={tocHeadings.map((heading) => ({
+    href: `#${heading.slug}`,
+    label: heading.text,
+    depth: heading.depth,
+  }))}
 >
       <header class="article-content-header">
         <p class="article-content-section">{section.toUpperCase()}</p>
@@ -90,14 +94,4 @@ const {
       });
     }
   </script>
-
-  <Fragment slot="toc">
-    <TocPanel
-      items={tocHeadings.map((heading) => ({
-        href: `#${heading.slug}`,
-        label: heading.text,
-        depth: heading.depth,
-      }))}
-    />
-  </Fragment>
-</ContentShell>
+</DocumentPageShell>

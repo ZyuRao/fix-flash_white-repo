@@ -1,0 +1,44 @@
+---
+import ContentShell from "./ContentShell.astro";
+import TocPanel from "../content/TocPanel.astro";
+
+interface TocItem {
+  href: string;
+  label: string;
+  depth?: 1 | 2 | 3;
+}
+
+interface Props {
+  variant?: "default" | "article";
+  background?: "home" | "code-rain" | "constellation";
+  contentClass?: string;
+  contentAriaLabel: string;
+  tocAriaLabel: string;
+  tocTitle?: string;
+  tocEmptyText?: string;
+  tocItems: TocItem[];
+}
+
+const {
+  variant = "default",
+  background,
+  contentClass = "content-page",
+  contentAriaLabel,
+  tocAriaLabel,
+  tocTitle,
+  tocEmptyText,
+  tocItems,
+} = Astro.props as Props;
+---
+
+<ContentShell
+  variant={variant}
+  background={background}
+  contentClass={contentClass}
+  contentAriaLabel={contentAriaLabel}
+  tocAriaLabel={tocAriaLabel}
+>
+  <slot />
+
+  <TocPanel slot="toc" title={tocTitle} emptyText={tocEmptyText} items={tocItems} />
+</ContentShell>
