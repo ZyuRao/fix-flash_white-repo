@@ -57,9 +57,8 @@ html:lang(zh-CN) .content-page--article {
 
 .article-content-meta-item span {
   color: color-mix(in srgb, var(--line) 52%, transparent);
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
 }
 
 .article-content-meta-item strong {
@@ -91,6 +90,9 @@ html:lang(zh-CN) .content-page--article {
 
 @media (min-width: 56.25rem) {
   .article-content-meta {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    gap: 0.95rem 1.4rem;
   }
 }

@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import node from '@astrojs/node';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
+import { rehypeFigureCaptions } from './src/utils/rehype-figure-captions.js';
 import { mdxVoidHtmlPlugin } from './src/utils/mdx-void-html.js';
 
 // https://astro.build/config
@@ -15,7 +16,7 @@ export default defineConfig({
   integrations: [mdx()],
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [rehypeKatex, rehypeFigureCaptions],
   },
   vite: {
     plugins: [mdxVoidHtmlPlugin()],

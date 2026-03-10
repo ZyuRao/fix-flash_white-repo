@@ -18,17 +18,23 @@ const isThemeMode = (value: string | undefined): value is ThemeMode =>
 const { title } = Astro.props as Props;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
 const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
+const PAGE_NAME_BY_ROUTE_ROOT = {
+  "": "Home",
+  about: "About",
+  blog: "Blog",
+  "blog-archive": "Blog",
+  note: "Note",
+  "note-archive": "Note",
+  project: "Project",
+  "project-archive": "Project",
+  links: "Links",
+} as const;
 const documentLang = ["blog", "note", "project", "blog-archive", "note-archive", "project-archive"].includes(routeRoot)
   ? "zh-CN"
   : "en";
 const pageName =
-  pathname === "/"
-    ? "Home"
-    : pathname
-        .split("/")
-        .filter(Boolean)
-        .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-        .join(" / ");
+  PAGE_NAME_BY_ROUTE_ROOT[routeRoot as keyof typeof PAGE_NAME_BY_ROUTE_ROOT] ??
+  (routeRoot ? routeRoot.charAt(0).toUpperCase() + routeRoot.slice(1) : "Home");
 const pageTitle = title ?? `${pageName} - ${site.name}`;
 const themeModeCookie = Astro.cookies.get(THEME_COOKIE_KEY)?.value;
 const resolvedThemeCookie = Astro.cookies.get(RESOLVED_THEME_COOKIE_KEY)?.value;

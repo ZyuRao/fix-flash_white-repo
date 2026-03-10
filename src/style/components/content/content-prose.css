@@ -21,6 +21,10 @@
   --content-body-line-height: 1.78;
 }
 
+.content-page--article .content-page-body > p {
+  text-indent: 2em;
+}
+
 .content-page-body h1 {
   margin: 0 0 1rem;
   font-size: clamp(2rem, 1.8rem + 1vw, 3.5rem);
@@ -51,9 +55,33 @@
   line-height: var(--content-body-line-height);
 }
 
+.content-page-body :is(strong, b) {
+  color: inherit;
+  font-weight: 600;
+}
+
 .content-page-body :is(blockquote, figcaption) {
   font-size: var(--content-body-font-size);
   line-height: var(--content-body-line-height);
+}
+
+.content-page-body .content-image-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.content-page-body .content-image-caption {
+  width: min(100%, var(--content-image-max-width));
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid color-mix(in srgb, var(--line) 18%, transparent);
+  color: color-mix(in srgb, var(--line) 66%, transparent);
+  font-size: clamp(0.78rem, 0.75rem + 0.1vw, 0.9rem);
+  line-height: 1.65;
+  text-align: center;
+  text-indent: 0;
 }
 
 html:lang(zh-CN) .content-page-body {
