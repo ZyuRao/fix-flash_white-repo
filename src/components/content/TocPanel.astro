@@ -12,6 +12,13 @@ interface Props {
 }
 
 const { items, title, emptyText = "No headings yet." } = Astro.props as Props;
+
+const hasHanCharacters = /[\u3400-\u9fff\uf900-\ufaff]/u;
+const hasLatinCharacters = /[A-Za-z]/;
+
+function getTocItemLang(label: string) {
+  return hasLatinCharacters.test(label) && !hasHanCharacters.test(label) ? "en" : undefined;
+}
 ---
 
 {
@@ -26,7 +33,11 @@ const { items, title, emptyText = "No headings yet." } = Astro.props as Props;
               `content-toc-item--depth-${item.depth ?? 2}`,
             ]}
           >
-            <a class={`content-toc-link content-toc-link--depth-${item.depth ?? 2}`} href={item.href}>
+            <a
+              class={`content-toc-link content-toc-link--depth-${item.depth ?? 2}`}
+              href={item.href}
+              lang={getTocItemLang(item.label)}
+            >
               {item.label}
             </a>
           </li>
