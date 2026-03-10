@@ -25,23 +25,28 @@ const {
     <details class="lost-links-panel">
       <summary class="lost-links-summary">{title}</summary>
 
-      {
-        items.length > 0 ? (
-          <ul class="lost-links-list" aria-label={title}>
-            {items.map((item) => (
-              <li class="lost-links-item">
-                <a class="lost-links-link" href={item.href} target="_blank" rel="noreferrer">
-                  <span class="lost-links-name">{item.name}</span>
-                  <span class="lost-links-divider" aria-hidden="true">бк</span>
-                  <span class="lost-links-description">{item.description}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="lost-links-empty">{emptyText}</p>
-        )
-      }
+      {items.length > 0 ? (
+        <ul class="lost-links-list" aria-label={title}>
+          {items.map((item) => (
+            <li class="lost-links-item">
+              <a
+                class="lost-links-link"
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span class="lost-links-name">{item.name}</span>
+                <span class="lost-links-divider" aria-hidden="true">
+                  |
+                </span>
+                <span class="lost-links-description">{item.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="lost-links-empty">{emptyText}</p>
+      )}
     </details>
   ) : null
 }

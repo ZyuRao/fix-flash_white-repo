@@ -8,6 +8,10 @@
 }
 
 .lost-links-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   cursor: pointer;
   list-style: none;
   padding: 0.95rem 1rem;
@@ -19,6 +23,23 @@
 
 .lost-links-summary::-webkit-details-marker {
   display: none;
+}
+
+.lost-links-summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  opacity: 0.72;
+  transform: rotate(45deg);
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.lost-links-panel[open] .lost-links-summary::after {
+  opacity: 1;
+  transform: rotate(135deg);
 }
 
 .lost-links-list {

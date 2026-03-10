@@ -5,6 +5,12 @@ export interface FriendLinkItem {
   avatarSrc: string;
 }
 
+export interface LostLinkItem {
+  name: string;
+  description: string;
+  href: string;
+}
+
 export const friendLinks = [
   {
     name: "Astro",
@@ -43,3 +49,11 @@ export const friendLinks = [
     avatarSrc: "/site-icon.svg",
   },
 ] satisfies readonly FriendLinkItem[];
+
+export const lostLinks = [
+  {
+    name: "Example Site",
+    description: "This site is currently unavailable.",
+    href: "https://example.com",
+  },
+] satisfies readonly LostLinkItem[];
