@@ -19,11 +19,11 @@ interface ContentModule {
   };
 }
 
-const articleModules = import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", {
+const articleModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
   eager: true,
 });
 
-const articleRawModules = import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", {
+const articleRawModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
   eager: true,
   query: "?raw",
   import: "default",
@@ -31,12 +31,12 @@ const articleRawModules = import.meta.glob("../../content/{blog,note,project}/*.
 
 export function getStaticPaths() {
   const articleEntries = Object.entries(
-    import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", { eager: true }),
+    import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", { eager: true }),
   ) as Array<[string, ContentModule]>;
 
   return articleEntries
     .map(([path, mod]) => {
-      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
       if (!match) return null;
 
       const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);
