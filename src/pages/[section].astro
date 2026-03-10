@@ -1,5 +1,6 @@
 ---
 import SectionListingPage from "../components/content/SectionListingPage.astro";
+import { getArchiveSlugFromPath } from "../utils/content-slug";
 
 interface ContentModule {
   frontmatter?: {
@@ -49,18 +50,23 @@ if (!section || !(section in sectionLabels)) {
   throw new Error("Unsupported section.");
 }
 
-const contentModules = import.meta.glob("../content/{blog,note,project}/*.{md,mdx}", {
+const contentModules = import.meta.glob("../content/{blog,note,project}/**/*.{md,mdx}", {
   eager: true,
 });
 
 const categories = Object.entries(contentModules)
   .map(([path, mod]) => {
-    const match = path.match(/^\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+    const match = path.match(/^\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
     if (!match || match[1] !== section) return null;
 
     const frontmatter = (mod as ContentModule).frontmatter;
-    const label = frontmatter?.type?.trim() || "Uncategorized";
-    const archiveSlug = normalizeArchiveSlug(frontmatter?.archiveSlug) || slugifyCategoryLabel(label) || "uncategorized";
+    const directoryArchiveSlug = getArchiveSlugFromPath(path, section);
+    const label = frontmatter?.type?.trim() || directoryArchiveSlug || "Uncategorized";
+    const archiveSlug =
+      directoryArchiveSlug ||
+      normalizeArchiveSlug(frontmatter?.archiveSlug) ||
+      slugifyCategoryLabel(label) ||
+      "uncategorized";
 
     return {
       archiveSlug,

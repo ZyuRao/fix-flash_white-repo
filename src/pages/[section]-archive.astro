@@ -39,13 +39,13 @@ if (!section || !(section in sectionLabels)) {
   throw new Error("Unsupported archive section.");
 }
 
-const contentModules = import.meta.glob("../content/{blog,note,project}/*.{md,mdx}", {
+const contentModules = import.meta.glob("../content/{blog,note,project}/**/*.{md,mdx}", {
   eager: true,
 }) as Record<string, ContentModule>;
 
 const articles = Object.entries(contentModules)
   .map(([path, mod]) => {
-    const match = path.match(/^\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+    const match = path.match(/^\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
     if (!match || match[1] !== section) return null;
 
     const routeSlug = resolveContentSlug(path, mod.frontmatter?.routeSlug);

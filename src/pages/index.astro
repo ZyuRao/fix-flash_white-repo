@@ -2,6 +2,7 @@
 import HomePageContent from "../components/home/HomePageContent.astro";
 import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
+import { resolveContentDates } from "../utils/content-dates";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
@@ -16,6 +17,8 @@ const latestNoteSourceModules = import.meta.glob("../content/note/*.{md,mdx}", {
 interface BlogModule {
   frontmatter?: {
     title?: string;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
   };
 }
 
@@ -41,7 +44,11 @@ function buildLatestArticles(sourceModules: Record<string, unknown>, section: "b
     const frontmatter = (mod as BlogModule).frontmatter;
     const title = resolveContentTitle(path, frontmatter?.title);
     const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
-    const { createdAt, updatedAt } = getGitTimestamps(new URL(path, import.meta.url));
+    const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(path, import.meta.url));
+    const { createdAt, updatedAt } = resolveContentDates(frontmatter, {
+      createdAt: gitCreatedAt,
+      updatedAt: gitUpdatedAt,
+    });
     const pubDate = createdAt ?? updatedAt;
 
     if (!slug || !pubDate || Number.isNaN(pubDate.getTime())) return null;

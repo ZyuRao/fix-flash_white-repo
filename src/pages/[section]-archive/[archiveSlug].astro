@@ -1,7 +1,12 @@
 ---
 import SectionArchivePage from "../../components/content/SectionArchivePage.astro";
 import { resolveContentDates } from "../../utils/content-dates";
-import { resolveContentSlug } from "../../utils/content-slug";
+import {
+  getArchiveSlugFromPath,
+  normalizeArchiveSlug,
+  resolveContentSlug,
+  slugifyCategoryLabel,
+} from "../../utils/content-slug";
 import { getGitTimestamps } from "../../utils/git-timestamps";
 import { resolveContentTitle } from "../../utils/content-title";
 
@@ -29,50 +34,22 @@ const sectionBaseLabels = {
   project: "Project",
 } as const;
 
-function normalizeArchiveSlug(value?: string) {
-  const normalized = value?.trim().replace(/^\/+|\/+$/g, "") || "";
-  return normalized && !normalized.includes("/") ? normalized : "";
-}
-
-function slugifyCategoryLabel(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[`*_~()[\]{}]/g, "")
-    .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
-
 export function getStaticPaths() {
-  const normalizeArchiveSlug = (value?: string) => {
-    const normalized = value?.trim().replace(/^\/+|\/+$/g, "") || "";
-    return normalized && !normalized.includes("/") ? normalized : "";
-  };
-
-  const slugifyCategoryLabel = (value: string) => {
-    return value
-      .toLowerCase()
-      .trim()
-      .replace(/[`*_~()[\]{}]/g, "")
-      .replace(/[^\p{Letter}\p{Number}\s-]/gu, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
-  };
-
-  const contentModules = import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", {
+  const contentModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
     eager: true,
   }) as Record<string, ContentModule>;
 
   const archiveEntries = Object.entries(contentModules)
     .map(([path, mod]) => {
-      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+      const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
       if (!match) return null;
 
       const label = mod.frontmatter?.type?.trim() || "Uncategorized";
-      const archiveSlug = normalizeArchiveSlug(mod.frontmatter?.archiveSlug) || slugifyCategoryLabel(label) || "uncategorized";
+      const archiveSlug =
+        getArchiveSlugFromPath(path, match[1]) ||
+        normalizeArchiveSlug(mod.frontmatter?.archiveSlug) ||
+        slugifyCategoryLabel(label) ||
+        "uncategorized";
 
       return {
         archiveSlug,
@@ -99,17 +76,21 @@ if (!section || !(section in sectionBaseLabels) || !archiveSlug) {
   throw new Error("Unsupported archive section or archive slug.");
 }
 
-const contentModules = import.meta.glob("../../content/{blog,note,project}/*.{md,mdx}", {
+const contentModules = import.meta.glob("../../content/{blog,note,project}/**/*.{md,mdx}", {
   eager: true,
 }) as Record<string, ContentModule>;
 
 const articles = Object.entries(contentModules)
   .map(([path, mod]) => {
-    const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/([^/]+)\.(md|mdx)$/i);
+    const match = path.match(/^\.\.\/\.\.\/content\/(blog|note|project)\/.+\.(md|mdx)$/i);
     if (!match || match[1] !== section) return null;
 
     const label = mod.frontmatter?.type?.trim() || "Uncategorized";
-    const currentArchiveSlug = normalizeArchiveSlug(mod.frontmatter?.archiveSlug) || slugifyCategoryLabel(label) || "uncategorized";
+    const currentArchiveSlug =
+      getArchiveSlugFromPath(path, section) ||
+      normalizeArchiveSlug(mod.frontmatter?.archiveSlug) ||
+      slugifyCategoryLabel(label) ||
+      "uncategorized";
 
     if (currentArchiveSlug !== archiveSlug) return null;
 
