@@ -93,8 +93,8 @@ const {
         </nav>
       )
     }
-    <p class="profile-one-word home-type-target" data-type-speed="42">{profile.bio}</p>
-    <p class="profile-bio home-type-target" data-type-speed="18">{profile.intro}</p>
+    <p class="profile-one-word home-type-target" data-type-speed="26">{profile.bio}</p>
+    <p class="profile-bio home-type-target" data-type-speed="11">{profile.intro}</p>
     <div class="home-profile-metrics">
       <div class="home-enter-item home-profile-metric">
         <CodeTime />
@@ -216,7 +216,7 @@ const {
           }
         };
 
-        const revealItems = async (elements, stagger = 72) => {
+        const revealItems = async (elements, stagger = 40) => {
           for (const element of elements) {
             if (element instanceof HTMLElement) {
               element.classList.add("is-visible");
@@ -224,7 +224,7 @@ const {
             await wait(stagger);
           }
 
-          await wait(120);
+          await wait(56);
         };
 
         const runHomeEntrance = () => {
@@ -259,24 +259,24 @@ const {
 
           const run = async () => {
             reset();
-            await wait(40);
+            await wait(16);
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            await revealItems(leadItems, 64);
+            await revealItems(leadItems, 36);
 
             for (const target of typeTargets) {
               if (profileRoot.dataset.homeEntranceRun !== runToken) return;
               await revealLetters(target);
-              await wait(48);
+              await wait(24);
             }
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
-            await revealItems(metrics, 84);
-            await wait(56);
+            await revealItems(metrics, 44);
+            await wait(24);
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
             latestRoot.classList.add("latest-articles--frame-visible");
-            await wait(220);
+            await wait(110);
 
             if (profileRoot.dataset.homeEntranceRun !== runToken) return;
             latestRoot.classList.add("latest-articles--entered");
