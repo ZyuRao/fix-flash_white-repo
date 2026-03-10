@@ -3,6 +3,7 @@ import HomePageContent from "../components/home/HomePageContent.astro";
 import { Github, Mail } from "lucide-static";
 import { site } from "../config/site";
 import { resolveContentDates } from "../utils/content-dates";
+import { resolveContentSlug } from "../utils/content-slug";
 import { resolveContentTitle } from "../utils/content-title";
 import { getGitTimestamps } from "../utils/git-timestamps";
 
@@ -11,13 +12,14 @@ const githubUsername = (profile.githubUsername || site.contact.githubUsername).t
 const bilibiliId = profile.bilibiliId.trim();
 const cloudMusicId = profile.cloudMusicId.trim();
 const emailAddress = (profile.email || site.contact.email).trim();
-const latestBlogSourceModules = import.meta.glob("../content/blog/*.{md,mdx}", { eager: true });
-const latestNoteSourceModules = import.meta.glob("../content/note/*.{md,mdx}", { eager: true });
+const latestBlogSourceModules = import.meta.glob("../content/blog/**/*.{md,mdx}", { eager: true });
+const latestNoteSourceModules = import.meta.glob("../content/note/**/*.{md,mdx}", { eager: true });
 
 interface BlogModule {
   frontmatter?: {
     title?: string;
     createdAt?: string | Date;
+    routeSlug?: string;
     updatedAt?: string | Date;
   };
 }
@@ -43,7 +45,7 @@ function buildLatestArticles(sourceModules: Record<string, unknown>, section: "b
   .map(([path, mod]) => {
     const frontmatter = (mod as BlogModule).frontmatter;
     const title = resolveContentTitle(path, frontmatter?.title);
-    const slug = path.split("/").pop()?.replace(/\.(md|mdx)$/i, "");
+    const slug = resolveContentSlug(path, frontmatter?.routeSlug);
     const { createdAt: gitCreatedAt, updatedAt: gitUpdatedAt } = getGitTimestamps(new URL(path, import.meta.url));
     const { createdAt, updatedAt } = resolveContentDates(frontmatter, {
       createdAt: gitCreatedAt,
