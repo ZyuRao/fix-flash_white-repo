@@ -7,6 +7,10 @@ interface Props {
 
 const { title } = Astro.props as Props;
 const pathname = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const routeRoot = pathname.split("/").filter(Boolean)[0] || "";
+const documentLang = ["blog", "note", "project", "blog-archive", "note-archive", "project-archive"].includes(routeRoot)
+  ? "zh-CN"
+  : "en";
 const pageName =
   pathname === "/"
     ? "Home"
@@ -18,7 +22,7 @@ const pageName =
 const pageTitle = title ?? `${pageName} - ${site.name}`;
 ---
 
-<html lang="en">
+<html lang={documentLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />

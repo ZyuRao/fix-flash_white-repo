@@ -2,13 +2,21 @@
   --content-image-max-width: min(100%, 24rem);
   --content-image-max-height: min(56vh, 24rem);
   --content-image-radius: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
+  --content-body-font-size: inherit;
+  --content-body-line-height: 1.8;
   --content-code-font-size: clamp(0.78rem, 0.76rem + 0.15vw, 0.9rem);
   --content-code-line-height: 1.7;
   --content-code-padding: clamp(0.8rem, 0.72rem + 0.45vw, 1rem);
   --content-code-radius: clamp(0.85rem, 0.75rem + 0.45vw, 1.1rem);
+  font-size: var(--content-body-font-size);
   height: auto;
   padding: clamp(0.85rem, 1.8vw, 1.4rem);
   overflow: visible;
+}
+
+.content-page--article .content-page-body {
+  --content-body-font-size: clamp(15px, 14.2px + 0.18vw, 16.5px);
+  --content-body-line-height: 1.78;
 }
 
 .content-page-body h1 {
@@ -37,7 +45,22 @@
 .content-page-body p,
 .content-page-body li {
   color: var(--line);
-  line-height: 1.8;
+  font-size: var(--content-body-font-size);
+  line-height: var(--content-body-line-height);
+}
+
+.content-page-body :is(blockquote, figcaption) {
+  font-size: var(--content-body-font-size);
+  line-height: var(--content-body-line-height);
+}
+
+html:lang(zh-CN) .content-page-body {
+  --content-body-font-size: inherit;
+}
+
+html:lang(zh-CN) .content-page--article .content-page-body {
+  --content-body-font-size: clamp(14px, 13.5px + 0.14vw, 15.2px);
+  --content-body-line-height: 1.76;
 }
 
 .content-page-body a {
